@@ -1,3 +1,7 @@
+0: mettre en olace un environnement virtuel et installer les dependences avec un requirements.txt ensuite python3 -m venv venv && source venv/bin/activate
+
+
+
 1: Mettre en place le .env
 
 --------------------------GITHUB-------------------------------------------
@@ -64,6 +68,15 @@ site_reservation_user;
 
 \q : quitter
 
+
+10 :  cree un fichier db.py pour connnecter la db a python (ne pas oublier de mettre a chaque dossier un __init__.py)
+
+import os
+import psycopg2
+from dotenv import load_dotenv
+
+
+11: 
 
 
 ----------------DATA BASE------------------------------------------------
