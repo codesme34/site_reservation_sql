@@ -71,15 +71,34 @@ site_reservation_user;
 
 10 :  cree un fichier db.py pour connnecter la db a python (ne pas oublier de mettre a chaque dossier un __init__.py)
 
-import os
-import psycopg2
-from dotenv import load_dotenv
+
+11: Si erreur clavier pour le mdp tu peux essayer : 
+
+PGPASSWORD='AZERTY123' psql -U site_reservation_user -d site_reservation -h localhost
 
 
-11: 
+
+12: Cree les tables que on a besoin sur le site  : Compte_client etc...... 
+
+on selection la databse cree et on fait \c site_reservation une fois dessus on cree la table: 
+
+exemple : CREATE TABLE compte_client (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    mot_de_passe TEXT NOT NULL,
+    date_inscription TIMESTAMP DEFAULT NOW()
+);
+
+
+
+
+
 
 
 ----------------DATA BASE------------------------------------------------
+
 
 
 
