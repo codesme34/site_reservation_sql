@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Site de voyage et reservation en ligne">
+  <title>Airlines reservation</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  <div class="sticky-wrapper">
+    <header>
+      <!-- Logo à gauche -->
+      <a href="/">
+        <div class="logo">
+          <img src="static/assets/images/logo_avion.webp" alt="Logo">
+        </div>
+      </a>
+
+      <!-- Milieu : Icône WhatsApp + textes -->
+      <div class="center-part">
+        <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+        <div class="text-stack">
+          <span class="text-top">24h/7J</span>
+          <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+        </div>
+      </div>
+
+      <!-- Barre de recherche à droite -->
+      <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="search" class="search-input" placeholder="Rechercher une ..." />
+      </div>
+
+
+      <div class="login_side">
+
+        <button class="boutton_connect">
+          <a href="/login">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Mon compte</p>
+        </button>
+        </a>
+      </div>
+    </header>
+<nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+      <a href="#pages">
+        <i class="fa-solid fa-file"></i>
+        <span>PAGES</span>
+      </a>
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+  </div>
+
+  <main class="contact-main">
+    <h1 class="panier-title">
+      <i class="fas fa-envelope"></i>
+      Contactez-nous
+    </h1>
+
+    <div class="contact-layout">
+
+      <!-- ===== INFOS DE CONTACT ===== -->
+      <div class="contact-info">
+        <h2>Une question ? Nous sommes là pour vous aider</h2>
+        <p>Notre équipe vous répond rapidement, du lundi au dimanche, 24h/24.</p>
+
+        <ul class="contact-info-list">
+          <li>
+            <i class="fa-brands fa-whatsapp"></i>
+            <div>
+              <strong>Téléphone</strong>
+              <span>01 64 12 32 58</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <div>
+              <strong>Email</strong>
+              <span>contact@airlines-reservation.fr</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <strong>Adresse</strong>
+              <span>12 rue des Voyageurs, 75001 Paris</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-clock"></i>
+            <div>
+              <strong>Disponibilité</strong>
+              <span>24h/24 - 7j/7</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ===== FORMULAIRE ===== -->
+      <div class="contact-form-card">
+        <h2>Envoyez-nous un message</h2>
+        <form action="/contact" method="post">
+          <div class="contact-form-row">
+            <div class="contact-form-group">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+            </div>
+            <div class="contact-form-group">
+              <label for="prenom">Prénom</label>
+              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+            </div>
+          </div>
+
+          <div class="contact-form-row">
+            <div class="contact-form-group">
+              <label for="tel">Téléphone</label>
+              <input type="tel" id="tel" name="tel" placeholder="Votre numéro" required>
+            </div>
+            <div class="contact-form-group">
+              <label for="mail">Email</label>
+              <input type="email" id="mail" name="mail" placeholder="Votre email" required>
+            </div>
+          </div>
+
+          <div class="contact-form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Votre message..." required></textarea>
+          </div>
+
+          <button type="submit" class="contact-submit">
+            <i class="fa-solid fa-paper-plane"></i> Envoyer le message
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER SIMPLE ===== -->
+  <footer class="site-footer">
+    <p>© 2025 Airlines Reservation – Tous droits réservés</p>
+  </footer>
+
+  <script src="static/js/script.js"></script>
+</body>
+</html>

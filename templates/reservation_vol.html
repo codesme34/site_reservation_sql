@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Site de voyage et reservation en ligne">
+  <title>Airlines reservation</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  <div class="sticky-wrapper">
+    <header>
+      <!-- Logo à gauche -->
+      <a href="/">
+        <div class="logo">
+          <img src="static/assets/images/logo_avion.webp" alt="Logo">
+        </div>
+      </a>
+
+      <!-- Milieu : Icône WhatsApp + textes -->
+      <div class="center-part">
+        <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+        <div class="text-stack">
+          <span class="text-top">24h/7J</span>
+          <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+        </div>
+      </div>
+
+      <!-- Barre de recherche à droite -->
+      <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="search" class="search-input" placeholder="Rechercher une ..." />
+      </div>
+
+
+      <div class="login_side">
+
+        <button class="boutton_connect">
+          <a href="/login">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Mon compte</p>
+        </button>
+        </a>
+      </div>
+    </header>
+
+
+    <nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+      <a href="#pages">
+        <i class="fa-solid fa-file"></i>
+        <span>PAGES</span>
+      </a>
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+  </div>
+
+
+  <div class="reservation-page-wrapper">
+    <section class="hotels-grid">
+      <div class="hotel-card">
+        <img src="{{ vol.image }}" alt="{{ vol.ville }}" class="hotel-image">
+        <h3>{{ vol.ville }}</h3>
+        <p>Pays : {{ vol.pays }}</p>
+        <p>Code :{{ vol.code_iata }}</p>
+        <p>Aéroport :{{ vol.aeroport }}</p>
+        <p>Date départ : {{ vol.vols[0]['date'] }}</p>
+        <p>Heure départ : {{ vol.vols[0]['heure_depart'] }}</p>
+        <p>Prix : {{ vol.vols[0]['prix']}} €</p>
+      </div>
+    </section>
+
+    <section class="customers-info">
+        <h1>Reservation en ligne ! </h1>
+        <form action="/customers/vol" method="post">
+          <div>
+            <label for="">Nombre d'adulte :</label>
+            <input type="number" name="adultes" placeholder="Adultes">
+          </div>
+          <div>
+            <label for="">Nombre d'enfants :</label>
+            <input type="number" name="enfants" placeholder="Mineurs">
+          </div>
+          <div>
+            <label for="">Votre nom :</label>
+            <input type="text" name="nom" placeholder="Nom">
+          </div>
+          <div>
+            <label for="">Votre prenom :</label>
+            <input type="text" name="prenom" placeholder="Prenom">
+          </div>
+          <div>
+            <label for="">Adresse :</label>
+            <input type="text" name="adresse" placeholder="Adresse">
+          </div>
+          <div>
+            <label for="">Ville :</label>
+            <input type="text" name="ville" placeholder="ville">
+          </div>
+          <div>
+            <label for="">Cp :</label>
+            <input type="text" name="cp" placeholder="code postal">
+          </div>
+          <div>
+            <label for="">Votre numéro de téléphone :</label>
+            <input type="tel" name="tel" placeholder="Telephone">
+          </div>
+          <div>
+            <label for="">Votre adresse mail :</label>
+            <input type="email" name="mail" placeholder="dupont@gmail.com">
+          </div>
+          <div>
+            
+            <input type="hidden" name="vol_photos" value="{{vol.image}}">
+            <input type="hidden" name="vol_ville" value="{{vol.ville}}">
+            <input type="hidden" name="vol_pays" value="{{vol.pays}}">
+            <input type="hidden" name="vol_depart_date" value="{{vol.vols[0]['date']}}">
+            <input type="hidden" name="vol_depart_heure" value="{{vol.vols[0]['heure_depart']}}">
+            <input type="hidden" name="vol_code_iata" value="{{vol.code_iata}}">
+            <input type="hidden" name="vol_aeroport" value="{{vol.aeroport}}">
+
+
+          </div>
+
+          <button type="submit">Soumettre</button>
+
+        </form>
+
+
+
+      </section>
+  </div>
+
+  <script src="/static/js/script.js"></script>
+</body>
+
+</html>

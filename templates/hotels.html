@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Site de voyage et reservation en ligne">
+  <title>Airlines reservation</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  <div class="sticky-wrapper">
+    <header>
+      <!-- Logo à gauche -->
+      <a href="/">
+        <div class="logo">
+          <img src="static/assets/images/logo_avion.webp" alt="Logo">
+        </div>
+      </a>
+
+      <!-- Milieu : Icône WhatsApp + textes -->
+      <div class="center-part">
+        <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+        <div class="text-stack">
+          <span class="text-top">24h/7J</span>
+          <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+        </div>
+      </div>
+
+      <!-- Barre de recherche à droite -->
+      <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="search" class="search-input" placeholder="Rechercher une ..." />
+      </div>
+
+
+      <div class="login_side">
+
+        <button class="boutton_connect">
+          <a href="/login">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Mon compte</p>
+        </button>
+        </a>
+      </div>
+    </header>
+
+
+    <nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+      <a href="#pages">
+        <i class="fa-solid fa-file"></i>
+        <span>PAGES</span>
+      </a>
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+  </div>
+
+  <section class=" hotels-grid">
+
+    {% for hotel in hotels %}
+      <div class="hotel-card">
+        <img src="{{ hotel.photos[0] }}" alt="{{ hotel.nom }}" class="hotel-image">
+        <h3>{{ hotel.nom }}</h3>
+        <p><strong>Adresse:</strong> {{ hotel.adresse }}</p>
+        <p><strong>Ville:</strong> {{ hotel.ville}}</p>
+        <p><strong>Cp:</strong> {{ hotel.cp }}</p>
+        <p><strong>Pays:</strong> {{ hotel.pays }}</p>
+        <p><strong>Tél:</strong> {{ hotel.telephone }}</p>
+        <p><strong>Description:</strong> {{ hotel.descriptions }}</p>
+        <p><strong>Avis:</strong> {{ hotel.avis }}</p>
+        <p>Prix : {{ hotel.tarifs }} € /nuits</p>
+        <button class="reserve-button"><a href="/reservation/{{ hotel.slug }}">Réserver</a></button>
+
+        
+      </div>
+    {% endfor %}
+
+    
+  </section>
+
+  <script src="static/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 50px 40px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+header .subtitle {
+    font-size: 1.3em;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.contact-info span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 0;
+}
+
+.sidebar {
+    background: #f8f9fa;
+    padding: 40px 30px;
+    border-right: 3px solid #667eea;
+}
+
+.content {
+    padding: 40px;
+}
+
+section {
+    margin-bottom: 35px;
+}
+
+h2 {
+    color: #667eea;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar h2 {
+    font-size: 1.3em;
+}
+
+.experience-item,
+.education-item {
+    margin-bottom: 25px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.experience-item::before,
+.education-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: #667eea;
+    border-radius: 50%;
+}
+
+.experience-item h3,
+.education-item h3 {
+    color: #333;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.date {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.95em;
+    margin-bottom: 5px;
+}
+
+.company {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #555;
+    line-height: 1.6;
+}
+
+.skills-list {
+    list-style: none;
+}
+
+.skills-list li {
+    background: white;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.languages div,
+.interests div {
+    background: white;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.level {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.profile-text {
+    color: #555;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 3px solid #667eea;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    .contact-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+}

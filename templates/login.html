@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Site de voyage et reservation en ligne">
+    <title>Airlines reservation</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="sticky-wrapper">
+        <header>
+            <!-- Logo à gauche -->
+            <a href="/">
+                <div class="logo">
+                    <img src="static/assets/images/logo_avion.webp" alt="Logo">
+                </div>
+            </a>
+
+            <!-- Milieu : Icône WhatsApp + textes -->
+            <div class="center-part">
+                <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+                <div class="text-stack">
+                    <span class="text-top">24h/7J</span>
+                    <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+                </div>
+            </div>
+
+            <!-- Barre de recherche à droite -->
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="search" class="search-input" placeholder="Rechercher une ..." />
+            </div>
+
+
+            <div class="login_side">
+
+                <button class="boutton_connect">
+                    <a href="/login">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <p>Mon compte</p>
+                </button>
+                </a>
+            </div>
+        </header>
+
+        <div class="login-wrapper">
+            <div class="login-header">
+                <i class="fa-regular fa-circle-user login-avatar"></i>
+                <h1>Connexion</h1>
+                <p>Accédez à votre espace personnel</p>
+            </div>
+
+            <div class="login-card">
+                <form action="/login" method="post" >
+                    <div class="field-group">
+                        <label>Adresse e-mail</label>
+                        <input type="email" name="email_user" placeholder="jean@exemple.com" required />
+                    </div>
+                    <div class="field-group">
+                        <label>Mot de passe</label>
+                        <input type="password" name="password" placeholder="••••••••" required />
+                    </div>
+                     <div class="forgot-link">Mot de passe oublié ?</div>
+                    <button type="submit">Se connecter</button>
+                </form>
+                <hr class="divider">
+                <p class="login-footer">Pas encore de compte ? <a href="/create_login">Créer un compte</a></p>
+            </div>
+        </div>
+
+
+</body>
+
+</html>

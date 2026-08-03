@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paiment">
+  <title>Airlines reservation</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="sticky-wrapper">
+    <header>
+      <!-- Logo à gauche -->
+      <a href="/">
+        <div class="logo">
+          <img src="static/assets/images/logo_avion.webp" alt="Logo">
+        </div>
+      </a>
+
+      <!-- Milieu : Icône WhatsApp + textes -->
+      <div class="center-part">
+        <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+        <div class="text-stack">
+          <span class="text-top">24h/7J</span>
+          <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+        </div>
+      </div>
+
+      <!-- Barre de recherche à droite -->
+      <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="search" class="search-input" placeholder="Rechercher une ..." />
+      </div>
+
+
+      <div class="login_side">
+
+        <button class="boutton_connect">
+          <a href="/login">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Mon compte</p>
+        </button>
+        </a>
+      </div>
+    </header>
+
+
+    <nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+      <a href="#pages">
+        <i class="fa-solid fa-file"></i>
+        <span>PAGES</span>
+      </a>
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+  </div>
+
+  <section>
+    <div class="payment-wrapper">
+      <div class="payment-header">
+        <div class="lock-icon"><i class="fas fa-lock"></i></div>
+        <h1>Paiement sécurisé</h1>
+        <p>Vos données sont cryptées et sécurisées</p>
+      </div>
+
+      <div class="payment-card">
+        <form action="/paiements_process" method="post">
+          <div class="field-group">
+            <label>Nom et prenom (Figurant sur la carte) </label>
+            <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z]/g,'') "name="nom" placeholder="Dupont axel" required />
+          </div>
+          <div class="field-group">
+            <label>Numéro de carte</label>
+            <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g,'').match(/.{1,4}/g)?.join(' ') || '' " name="numero_cb" placeholder="1234 5678 9012 3456" maxlength="19" required />
+          </div>
+          <div class="fields-row">
+            <div class="field-group">
+              <label>Mois / Année</label>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g,'').match(/.{1,2}/g)?.join('/') || '' " name="expiry"  placeholder="MM/AA" maxlength="5" required />
+            </div>
+            <div class="field-group">
+              <label>CVV</label>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g,'')" name="cvv"  placeholder="123" maxlength="3" required />
+            </div>
+          </div>
+          <hr class="divider">
+          <button type="submit">
+            <i class="fas fa-lock"></i> Payer maintenant
+          </button>
+        </form>
+        <p class="payment-secure"><i class="fas fa-shield-alt"></i> Paiement 100% sécurisé</p>
+      </div>
+    </div>
+
+
+  </section>
+
+  <script src="static/js/script.js"></script>
+</body>
+
+</html>

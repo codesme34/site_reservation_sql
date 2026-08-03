@@ -1,20 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
-
-
 from psycopg2 import errors
 from Database.db import get_connection
 import bcrypt
-
-
+import os
 
 app = Flask(__name__)
 
 limiter = Limiter(app=app, key_func=get_remote_address)
-
-
 
 @app.route("/compte_client",methods=['POST'])
 @limiter.limit('1 per minute')
@@ -24,8 +18,6 @@ def creation_compte():
     cursor = conn.cursor() # execute les requetes sql
 
     data = request.get_json()
-
-
     try : 
 
         nom_client = data['nom']
@@ -37,13 +29,10 @@ def creation_compte():
 
         mdp_hash = bcrypt.hashpw(mdp.encode('utf-8'), bcrypt.gensalt())
 
-
-
         # attention a bien mettre le parametre '%s' pour eviter les attaques jamais mettre de f'string (f'insert to .....')
         cursor.execute(
         "INSERT INTO compte_client (nom, prenom, email, mdp) VALUES (%s, %s, %s, %s)",
         (nom_client, prenom_client, email, mdp_hash))
-
 
         conn.commit()
 

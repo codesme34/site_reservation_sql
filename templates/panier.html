@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon Panier – Airlines Reservation</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <div class="sticky-wrapper">
+        <header>
+            <!-- Logo à gauche -->
+            <a href="/">
+                <div class="logo">
+                    <img src="static/assets/images/logo_avion.webp" alt="Logo">
+                </div>
+            </a>
+
+            <!-- Milieu : Icône WhatsApp + textes -->
+            <div class="center-part">
+                <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+                <div class="text-stack">
+                    <span class="text-top">24h/7J</span>
+                    <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+                </div>
+            </div>
+
+            <!-- Barre de recherche à droite -->
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="search" class="search-input" placeholder="Rechercher une ..." />
+            </div>
+
+
+            <div class="login_side">
+
+                <button class="boutton_connect">
+                    <a href="/login">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <p>Mon compte</p>
+                </button>
+                </a>
+            </div>
+        </header>
+
+        <nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+      <a href="#pages">
+        <i class="fa-solid fa-file"></i>
+        <span>PAGES</span>
+      </a>
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+    </div>
+
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="panier-main">
+        <h1 class="panier-title">
+            <i class="fas fa-shopping-cart"></i>
+            Mon Panier
+        </h1>
+
+        <div class="panier-layout">
+
+            <!-- ===== ARTICLES ===== -->
+            <section class="panier-articles">
+
+                {% for reserves in reserve %}    
+                <!-- Article 1 – Hôtel -->
+                <div class="panier-card">
+                
+                    
+                    <div class="card-badge hotel">Hôtel</div>
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=160&h=110&fit=crop"/>
+                    <div class="card-info">
+                        <h2>{{ reserves.Hotel_reserve }}</h2>
+                        <p class="card-address"><i class="fas fa-map-marker-alt"></i>{{ reserves.Adresse_H }}</p>
+                        <div class="card-details">
+                            <span><i class="fas fa-calendar-check"></i>Arrivé {{ reserves.Date_arrivé}}</span>
+                            <span><i class="fas fa-calendar-times"></i>Départ {{ reserves.Date_de_depart }}</span>
+                            <span><i class="fas fa-moon"></i>{{ reserves.Nuit }} nuits</span>
+                            <span><i class="fas fa-user-friends"></i>{{ reserves.Nombre_adulte}} adultes</span>
+                            <span><i class="fas fa-user-friends"></i>{{ reserves.Nombre_enfants}} enfants</span>
+                        </div>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>{{ reserves.Avis}}</span>
+                        </div>
+                    </div>
+                    <div class="card-price-block">
+                        <div class="price-unit">{{ reserves.Tarif_par_nuit}}€<small>/nuit</small></div>
+                        <div class="price-total">Total : <strong>{{ reserves.Tarifs}} €</strong></div>
+                        <form action="/paiements_process" method="GET">
+                        <button type="submit" class="btn-paid"><i class="fa-solid fa-credit-card"></i> Payer</button></form>
+                        <form action="/delete_H/{{ reserves._id }}" method="POST">
+                        <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i>Supprimer</button></form>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% for vol in vols %}    
+                <!-- Article 1 – Hôtel -->
+                <div class="panier-card">
+                
+                    
+                    <div class="card-badge hotel">Vol</div>
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=160&h=110&fit=crop"/>
+                    <div class="card-info">
+                        <h2>Destination: {{ vol.Vol_reserve }}</h2>
+                        <p class="card-address">Pays : {{ vol.Pays_V }}</p>
+                        <p class="card-address">Aeroport : {{ vol.Aeroport}}</p>
+                        <p class="card-address">Code : {{ vol.Code_iata }}</p>
+                        <div class="card-details">
+                            <span><i class="fas fa-calendar-check"></i>Date de départ :  {{ vol.Date_de_depart}}</span>
+                            <span><i class="fas fa-calendar-times"></i>Heure de départ : {{ vol.Heure_depart }}</span>
+                            <span><i class="fas fa-user-friends"></i>{{ vol.Nombre_adulte}} adultes</span>
+                            <span><i class="fas fa-user-friends"></i>{{ vol.Nombre_enfants}} enfants</span>
+                        </div>
+                    </div>
+                    <div class="card-price-block">
+                        <div class="price-unit">{{ vol.Prix_vol}}€ <small>/Personne</small></div>
+                        <div class="price-total">Total : <strong>{{ vol.Prix_totale}} €</strong></div>
+                        <form action="/paiements_process" method="GET">
+                        <button type="submit" class="btn-paid"><i class="fa-solid fa-credit-card"></i> Payer</button></form>
+                        <form action="/delete_V/{{ vol._id }}" method="POST">
+                        <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i>Supprimer</button></form>
+
+                    </div>
+                </div>
+                {% endfor %}
+                
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ===== FOOTER SIMPLE ===== -->
+    <footer class="site-footer">
+        <p>© 2025 Airlines Reservation – Tous droits réservés</p>
+    </footer>
+
+</body>
+
+</html>

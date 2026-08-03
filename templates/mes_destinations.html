@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon Panier – Airlines Reservation</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <div class="sticky-wrapper">
+        <header>
+            <!-- Logo à gauche -->
+            <a href="/">
+                <div class="logo">
+                    <img src="static/assets/images/logo_avion.webp" alt="Logo">
+                </div>
+            </a>
+
+            <!-- Milieu : Icône WhatsApp + textes -->
+            <div class="center-part">
+                <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+                <div class="text-stack">
+                    <span class="text-top">24h/7J</span>
+                    <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+                </div>
+            </div>
+
+            <!-- Barre de recherche à droite -->
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="search" class="search-input" placeholder="Rechercher une ..." />
+            </div>
+
+
+            <div class="login_side">
+
+                <button class="boutton_connect">
+                    <a href="/login">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <p>Mon compte</p>
+                </button>
+                </a>
+            </div>
+        </header>
+
+        <nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+      <a href="#pages">
+        <i class="fa-solid fa-file"></i>
+        <span>PAGES</span>
+      </a>
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+    </div>
+
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="panier-main">
+        <h1 class="panier-title">
+            <i class="fas fa-earth-americas"></i>
+            Mes Destinations
+        </h1>
+
+        <div class="destinations-layout">
+
+            {% if reserve %}
+            <table class="destinations-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Destination</th>
+                        <th>Dates</th>
+                        <th>Voyageurs</th>
+                        <th>Prix</th>
+                        <th>Réservé par</th>
+                        <th>Payé le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paiement in reserve %}
+                    {% set details = paiement['Détails'] %}
+                    <tr>
+                        {% if details.Hotel_reserve is defined %}
+                        <td><span class="card-badge hotel">Hôtel</span></td>
+                        <td>
+                            <strong>{{ details.Hotel_reserve }}</strong><br>
+                            <small><i class="fas fa-map-marker-alt"></i> {{ details.Adresse_H }}, {{ details.Ville_H }}</small>
+                        </td>
+                        <td>
+                            Du {{ details.Date_arrivé }} au {{ details.Date_de_depart }}<br>
+                            <small>{{ details.Nuit }} nuit(s)</small>
+                        </td>
+                        <td>{{ details.Nombre_adulte }} adulte(s), {{ details.Nombre_enfants }} enfant(s)</td>
+                        <td>
+                            {{ details.Tarif_par_nuit }} €/nuit<br>
+                            <strong>Total : {{ details.Tarifs }} €</strong>
+                        </td>
+                        {% else %}
+                        <td><span class="card-badge vol">Vol</span></td>
+                        <td>
+                            <strong>{{ details.Vol_reserve }}</strong> ({{ details.Pays_V }})<br>
+                            <small>{{ details.Aeroport }} - {{ details.Code_iata }}</small>
+                        </td>
+                        <td>
+                            Le {{ details.Date_de_depart }}<br>
+                            <small>Départ à {{ details.Heure_depart }}</small>
+                        </td>
+                        <td>{{ details.Nombre_adulte }} adulte(s), {{ details.Nombre_enfants }} enfant(s)</td>
+                        <td>
+                            {{ details.Prix_vol }} €/personne<br>
+                            <strong>Total : {{ details.Prix_totale }} €</strong>
+                        </td>
+                        {% endif %}
+                        <td>{{ paiement['Nom et prenom'] }}</td>
+                        <td>{{ paiement['Date de paiements'].strftime('%d/%m/%Y à %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-destination">Vous n'avez encore aucune réservation payée.</p>
+            {% endif %}
+
+        </div>
+    </main>
+
+    <!-- ===== FOOTER SIMPLE ===== -->
+    <footer class="site-footer">
+        <p>© 2025 Airlines Reservation – Tous droits réservés</p>
+    </footer>
+
+</body>
+
+</html>
