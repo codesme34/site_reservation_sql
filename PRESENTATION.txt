@@ -1,0 +1,109 @@
+=====================================================
+PRESENTATION DU PROJET - Site de reservation (backend SQL)
+=====================================================
+
+------------------------------------------------------
+1. POURQUOI FLASK ET PAS UN AUTRE FRAMEWORK
+------------------------------------------------------
+
+- Flask est un micro-framework : il fournit juste le routage HTTP (les routes @app.route)
+  et la gestion des requetes/reponses, sans imposer de structure figee.
+  Contrairement a Django (qui impose un ORM, une architecture MVC stricte, un panel admin
+  automatique...), Flask laisse le developpeur choisir ses propres outils.
+
+- Ce choix colle avec l'esprit de l'examen : demontrer la maitrise du SQL et du backend
+  "a la main". Avec Django, l'ORM (Django ORM) genererait le SQL automatiquement et
+  cacherait justement le travail qu'on veut montrer. Avec Flask + psycopg2, on ecrit
+  les requetes SQL nous-memes (SELECT, INSERT, UPDATE, DELETE), ce qui est plus proche
+  du besoin pedagogique.
+
+- Legerete : pour un projet de taille moyenne comme un site de reservation (quelques
+  dizaines de routes), un framework complet comme Django serait surdimensionne.
+
+- Ecosysteme suffisant pour les besoins du projet : Flask-Login (gestion de session/
+  authentification), Flask-Limiter (rate limiting anti brute-force), Flask-WTF
+  (protection CSRF plus tard cote front), bcrypt (hash des mots de passe).
+
+- Coherence avec l'existant : une premiere version du projet (MongoDB) a deja ete
+  developpee en Flask, ce qui permet de reutiliser la logique de routage/authentification
+  deja maitrisee, en changeant uniquement la couche base de donnees (Mongo -> PostgreSQL).
+
+- Complementaire avec l'autre partie de l'examen (backend "pur", sans framework, en
+  http.server) : Flask represente le cas "framework leger" a mettre en regard du cas
+  "zero framework", pour montrer la comprehension des deux approches.
+
+
+------------------------------------------------------
+2. LE BACKEND : ARCHITECTURE ET SECURITE (OWASP)
+------------------------------------------------------
+
+Architecture :
+- Flask (routage + logique metier) + PostgreSQL (donnees relationnelles)
+- psycopg2 en SQL brut (pas d'ORM) : requetes ecrites et maitrisees a la main
+- Separation des responsabilites : Database/db.py gere uniquement la connexion,
+  app.py contient les routes et la logique metier
+- Variables sensibles (mot de passe DB, cle secrete Flask) stockees dans .env,
+  jamais commitees sur GitHub (.gitignore)
+
+Regles de securite appliquees (OWASP) :
+
+- Injection SQL : toutes les requetes utilisent des parametres (%s) avec psycopg2,
+  jamais de f-string ou de concatenation de chaines avec des donnees utilisateur.
+  Le driver echappe automatiquement les valeurs.
+
+- Mots de passe : hash avec bcrypt (bcrypt.hashpw + salt genere aleatoirement a
+  chaque inscription), jamais stocke ni transmis en clair.
+
+- Integrite des donnees au niveau de la base : contrainte UNIQUE sur l'email
+  directement dans PostgreSQL (pas seulement une verification cote Python), pour
+  eviter les doublons meme en cas de requetes simultanees (race condition).
+
+- Rate limiting : Flask-Limiter limite le nombre de requetes par adresse IP sur
+  les routes sensibles (ex: creation de compte), pour se proteger du spam et du
+  brute-force.
+
+- Gestion des erreurs : try/except avec rollback() systematique en cas d'erreur,
+  pour ne jamais laisser une transaction PostgreSQL dans un etat incoherent.
+
+- Configuration : mode debug de Flask actif uniquement en developpement local,
+  jamais en production (une erreur en debug=True expose le code source et les
+  chemins de fichiers a l'utilisateur).
+
+
+------------------------------------------------------
+3. DIFFICULTES RENCONTREES PENDANT LE PROJET
+------------------------------------------------------
+
+- Incompatibilite de collation PostgreSQL (mise a jour systeme Fedora ayant change
+  la version de la librairie de collation) : resolu avec
+  ALTER DATABASE ... REFRESH COLLATION VERSION.
+
+- Erreurs de syntaxe SQL dues a des points-virgules oublies : plusieurs commandes
+  se retrouvaient concatenees en une seule requete invalide par psql.
+
+- Table creee avec le mauvais proprietaire (l'utilisateur admin "postgres" au lieu
+  de l'utilisateur applicatif dedie) : provoquait une erreur "droit refuse"
+  (InsufficientPrivilege) au moment de l'INSERT depuis l'application. Corrige avec
+  ALTER TABLE ... OWNER TO / ALTER SEQUENCE ... OWNER TO.
+
+- Connexion a la base ouverte une seule fois au demarrage de l'application (variable
+  globale) au lieu d'une connexion par requete : la connexion se fermait des le
+  premier appel et cassait toutes les requetes suivantes. Corrige en ouvrant/fermant
+  une connexion a chaque requete recue.
+
+- Ordre d'initialisation incorrect entre Flask-Limiter et l'instance Flask (le
+  limiter etait cree avant "app = Flask(__name__)") : provoquait une erreur au
+  demarrage du serveur.
+
+- Contrainte UNIQUE oubliee au depart sur l'email : des doublons se sont crees en
+  base pendant les tests, necessitant un nettoyage manuel avant de pouvoir ajouter
+  la contrainte a posteriori.
+
+- Erreurs de test avec Postman (Content-Type non defini sur application/json,
+  JSON invalide avec des guillemets simples au lieu de doubles) : bonne occasion
+  de comprendre concretement le fonctionnement du protocole HTTP et du format JSON.
+
+Ces difficultes illustrent un point cle du developpement backend avec une vraie base
+relationnelle : contrairement a MongoDB (schema flexible), PostgreSQL impose de
+reflechir a la structure, aux contraintes et aux droits des l'origine, ce qui demande
+plus de rigueur mais garantit une meilleure integrite des donnees.
