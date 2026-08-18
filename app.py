@@ -132,12 +132,51 @@ def vols():
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT destinations.ville, destinations.pays, destinations.code_iata,destinations.aeroport, destinations.image,vols.date, vols.heure_depart, vols.prix, vols.compagnie FROM vols JOIN destinations ON vols.destination_id = destinations.id""")
 
-    
-    
 
     return render_template('vols.html', vols= cursor.fetchall())
 
 
+@app.route("/contact", methods=['GET','POST'])
+@limiter.limit('1 per minute', methods=['POST'])
+def contact():
+
+    conn = get_connection() # connect la db 
+    cursor = conn.cursor() # execute les requetes sql
+
+
+    if request.method == "POST":
+
+        try :     
+            
+            nom = request.form["nom"]
+            prenom = request.form['prenom']
+            tel = request.form['tel']
+            mail = request.form['mail']
+            message = request.form['message']
+
+            cursor.execute(
+                        "INSERT INTO formulaire_contact (nom, prenom, telephone, email, message) VALUES (%s, %s, %s, %s,%s)",
+                        (nom, prenom, tel,mail,message))
+            
+            conn.commit()
+
+            return redirect(url_for('success'))
+
+        except KeyError:
+            conn.rollback()
+            return render_template('contact.html'), 400
+        finally:
+            cursor.close()
+            conn.close()
+
+    else:    
+        return render_template('contact.html')
+
+
+#------------------Route contact----------------
+@app.route("/thankyou",methods= ['GET'])
+def success ():
+    return render_template('thankyou.html')
     
 
 
