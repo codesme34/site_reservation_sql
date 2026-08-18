@@ -108,9 +108,9 @@
         <p><strong>Ville:</strong> {{ vol.ville}}</p>
         <p><strong>Pays:</strong> {{ vol.pays }}</p>
         <p><strong>Aéroport:</strong> {{ vol.code_iata }}</p>
-        <p>Date: {{ vol.vols[0]['date'] }} </p>
-        <p>Heure: {{ vol.vols[0]['heure_depart'] }} </p>
-        <p>Prix : {{ vol.vols[0]['prix'] }} € </p>
+        <p>Date: {{ vol.date }} </p>
+        <p>Heure: {{ vol.heure_depart }} </p>
+        <p>Prix : {{ vol.prix }} € </p>
 
         <button class="reserve-button"><a href="/reservation/vols/{{vol.ville}}">Réserver</a></button>
 

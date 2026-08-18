@@ -103,7 +103,7 @@
 
     {% for hotel in hotels %}
       <div class="hotel-card">
-        <img src="{{ hotel.photos[0] }}" alt="{{ hotel.nom }}" class="hotel-image">
+        <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}" class="hotel-image">
         <h2>{{ hotel.nom }}</h2>
         <p><strong>Adresse:</strong> {{ hotel.adresse }}</p>
         <p><strong>Ville:</strong> {{ hotel.ville}}</p>

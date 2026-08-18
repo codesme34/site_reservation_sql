@@ -7,10 +7,9 @@ from flask_login import LoginManager,UserMixin,logout_user,login_user,login_requ
 import bcrypt
 import os
 from psycopg2.extras import RealDictCursor
-
-
-
 import random
+
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -113,8 +112,30 @@ def search():
         cursor.close()
         conn.close()
 
-        
 
+@app.route("/hotels",methods= ['GET'])
+def hotels():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT * FROM hotels")
+
+
+
+    return render_template('hotels.html', hotels=cursor.fetchall())        
+
+
+@app.route("/vols_E",methods= ['GET'])
+def vols():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT destinations.ville, destinations.pays, destinations.code_iata,destinations.aeroport, destinations.image,vols.date, vols.heure_depart, vols.prix, vols.compagnie FROM vols JOIN destinations ON vols.destination_id = destinations.id""")
+
+    
+    
+
+    return render_template('vols.html', vols= cursor.fetchall())
 
 
     
