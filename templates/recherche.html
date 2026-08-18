@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Site de voyage et reservation en ligne">
-  <title>Airlines reservation</title>
+  <meta name="description" content="Résultats de votre recherche d'hôtel ou de vol sur Airlines Reservation.">
+  <meta name="robots" content="noindex, follow">
+  <title>Résultats de recherche | Airlines Reservation</title>
   <link rel="stylesheet" href="/static/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -96,13 +97,15 @@
     </nav>
   </div>
 
+  <h1 class="page-title">Résultats de recherche</h1>
+
   <section class="results-grid">
   {% for item in resultats %}
   <div class="result-card">
     {% if type == 'hotel' %}
       <img src="{{ item.photos }}" alt="{{ item.nom }}">
       <div class="result-card-body">
-        <h3>{{ item.nom }}</h3>
+        <h2>{{ item.nom }}</h2>
         <p>{{ item.ville }}</p>
         <p class="result-price">{{ item.tarifs }} €/nuit</p>
       </div>
@@ -110,7 +113,7 @@
     {% else %}
       <img src="{{ item.image }}" alt="{{ item.ville }}">
       <div class="result-card-body">
-        <h3>{{ item.ville }}</h3>
+        <h2>{{ item.ville }}</h2>
         <p>{{ item.pays }} — {{ item.code_iata }}</p>
         <p>{{ item.aeroport }}</p>
         <p>Prochain départ : {{ item.date }} à {{ item.heure_depart }}</p>

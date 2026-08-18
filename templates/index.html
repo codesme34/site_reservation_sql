@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Site de voyage et reservation en ligne">
-  <title>Airlines reservation</title>
-  <link rel="canonical" href="http://127.0.0.1:5000/">
+  <meta name="description" content="Réservez facilement votre hôtel ou votre vol en Europe : plus de 50 destinations, meilleurs tarifs, réservation en ligne rapide et sécurisée.">
+  <title>Réservation Hôtels & Vols en Ligne | Airlines Reservation</title>
+  <link rel="canonical" href="{{ request.base_url }}">
   <link rel="stylesheet" href="/static/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -97,6 +97,7 @@
   <section class="hero-section">
     <div class="image-accueil">
       <img src="static/assets/images/main2.webp" alt="Un couple regardant le coucher de soleil">
+      <h1 class="hero-title">Réservez votre hôtel ou votre vol au meilleur prix</h1>
     </div>
   
     <form action="/search" class="search-bar" method="POST">

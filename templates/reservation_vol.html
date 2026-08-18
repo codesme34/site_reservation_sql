@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Site de voyage et reservation en ligne">
-  <title>Airlines reservation</title>
+  <meta name="description" content="Réservez votre vol pour {{ vol.ville }}, {{ vol.pays }}, au départ de {{ vol.aeroport }}.">
+  <title>Vol pour {{ vol.ville }} | Airlines Reservation</title>
+  <link rel="canonical" href="{{ request.base_url }}">
   <link rel="stylesheet" href="/static/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -101,7 +102,7 @@
     <section class="hotels-grid">
       <div class="hotel-card">
         <img src="{{ vol.image }}" alt="{{ vol.ville }}" class="hotel-image">
-        <h3>{{ vol.ville }}</h3>
+        <h2>{{ vol.ville }}</h2>
         <p>Pays : {{ vol.pays }}</p>
         <p>Code :{{ vol.code_iata }}</p>
         <p>Aéroport :{{ vol.aeroport }}</p>
