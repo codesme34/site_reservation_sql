@@ -32,6 +32,12 @@ PRESENTATION DU PROJET - Site de reservation (backend SQL)
   http.server) : Flask represente le cas "framework leger" a mettre en regard du cas
   "zero framework", pour montrer la comprehension des deux approches.
 
+- Contrainte d'hebergement : l'hebergeur prevu pour la mise en ligne (o2switch) ne
+  supporte pas FastAPI (pas d'environnement ASGI adapte), alors qu'il supporte Flask
+  nativement (WSGI, mod_wsgi/Passenger). FastAPI aurait pourtant ete une option
+  moderne interessante (typage, performances asynchrones), mais ce n'etait pas
+  compatible avec la solution d'hebergement retenue.
+
 
 ------------------------------------------------------
 2. LE BACKEND : ARCHITECTURE ET SECURITE (OWASP)
@@ -69,6 +75,25 @@ Regles de securite appliquees (OWASP) :
   jamais en production (une erreur en debug=True expose le code source et les
   chemins de fichiers a l'utilisateur).
 
+
+----------------------------------- Pourquoi dans chaque route ?---------------------------
+conn = get_connection()
+cursor = conn.cursor()
+Pourquoi tu le fais actuellement dans chaque route : ouvrir une connexion par requête est le pattern le plus simple et le plus sûr (pas de risque de connexion partagée entre plusieurs utilisateurs en même temps, pas de bug de concurrence). C'est ce qu'on a mis en place volontairement plus tôt, après le bug de la connexion globale qui cassait au 2ème appel.  
+-------------------------------------------------------------------------
+
+
+-UserMixin est une classe fournie par flask_login que ta classe User hérite (class User(UserMixin)). Son rôle : Flask-Login a besoin que tout objet représentant un utilisateur connecté possède certaines propriétés/méthodes précises pour fonctionner. Sans UserMixin, il faudrait les écrire toi-même à la main.
+
+UserMixin te donne gratuitement :
+
+is_authenticated : True si l'utilisateur est bien connecté (utilisé en interne par Flask-Login pour savoir si la session est valide).
+is_active : True si le compte est actif (utile si un jour tu ajoutes un système de comptes désactivés/bannis).
+is_anonymous : False pour un vrai utilisateur connecté (Flask-Login l'utilise pour distinguer un visiteur non connecté d'un utilisateur réel).
+get_id() : renvoie l'identifiant de l'utilisateur sous forme de string — c'est cette méthode que Flask-Login utilise pour stocker l'id dans le cookie de session, et pour le redonner ensuite à ta fonction load_user(user_id) à chaque requête.
+Concrètement, dans ton code : quand tu fais login_user(User(user)), Flask-Login appelle en interne get_id() sur cet objet pour savoir quoi stocker dans la session. Comme ta classe définit déjà self.id = str(user_row[0]) (ligne 25), UserMixin sait automatiquement renvoyer cette valeur via get_id() — tu n'as rien eu à coder toi-même pour ça.
+
+En résumé : UserMixin est un raccourci qui évite de réimplémenter l'interface standard que Flask-Login attend de tout objet "utilisateur".
 
 ------------------------------------------------------
 3. DIFFICULTES RENCONTREES PENDANT LE PROJET

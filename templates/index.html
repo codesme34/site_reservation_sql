@@ -200,7 +200,7 @@
         {% for hotel in hotels %}
         <div class="h-card">
           <div class="h-card__img-wrap">
-            <img src="{{ hotel.photos[0] }}" alt="{{ hotel.nom }}">
+            <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}">
             <div class="h-card__badge">Hôtel</div>
             <div class="h-card__stars">
               <i class="fa-solid fa-star"></i>
@@ -247,7 +247,7 @@
               {{ vol.code_iata }}
               <small>{{ vol.ville }}</small>
             </div>
-            <div class="v-card__price-badge">{{ vol.vols[0]['prix'] }} €</div>
+            <div class="v-card__price-badge">{{ vol.prix }} €</div>
           </div>
           <div class="v-card__body">
             <div class="v-card__route">
@@ -260,17 +260,17 @@
             <div class="v-card__timeline">
               <div class="v-timeline-row">
                 <i class="fa-regular fa-calendar"></i>
-                <span>Date :</span><strong>{{ vol.vols[0]['date'] }}</strong>
+                <span>Date :</span><strong>{{ vol.date }}</strong>
               </div>
               <div class="v-timeline-row">
                 <i class="fa-regular fa-clock"></i>
-                <span>Départ :</span><strong>{{ vol.vols[0]['heure_depart'] }}</strong>
+                <span>Départ :</span><strong>{{ vol.heure_depart }}</strong>
               </div>
             </div>
             <div class="v-card__footer">
               <div class="v-card__price">
                 <span class="price-from">À partir de</span>
-                <span class="price-big">{{ vol.vols[0]['prix'] }} <small>€</small></span>
+                <span class="price-big">{{ vol.prix }} <small>€</small></span>
               </div>
               <a href="/reservation/vols/{{ vol.ville }}" class="btn-reserve">
                 Réserver <i class="fa-solid fa-arrow-right"></i>

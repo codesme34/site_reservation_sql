@@ -4,9 +4,13 @@ from flask_limiter.util import get_remote_address
 from psycopg2 import errors
 from Database.db import get_connection
 from flask_login import LoginManager,UserMixin,logout_user,login_user,login_required,current_user
-
 import bcrypt
 import os
+from psycopg2.extras import RealDictCursor
+
+
+
+import random
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -40,6 +44,43 @@ def load_user(user_id):
     if user:
         return User(user)
     return None
+
+
+
+@app.route("/")
+def home():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try : 
+        cursor.execute("SELECT * FROM hotels")
+        hot = cursor.fetchall()
+
+        cursor.execute("""
+        SELECT destinations.ville, destinations.pays, destinations.code_iata,
+            destinations.aeroport, destinations.image,
+            vols.date, vols.heure_depart, vols.prix, vols.compagnie
+        FROM vols
+        JOIN destinations ON vols.destination_id = destinations.id""")
+
+
+        vol_s = cursor.fetchall()
+        list_hotels = hot
+        list_vols = vol_s
+
+
+
+        hotel_ran = random.sample(list_hotels,12)
+        vol_ran =random.sample(list_vols,12)
+
+        return render_template('index.html',hotels= hotel_ran,vols= vol_ran)
+
+    finally: 
+        cursor.close()
+        conn.close()
+
+    
 
 
 @app.route("/create_login",methods=['POST','GET'])
@@ -129,11 +170,6 @@ def login_page():
     finally:
             cursor.close()
             conn.close()
-
-
-@app.route("/")
-def home():
-    return render_template('index.html')
 
     
 
