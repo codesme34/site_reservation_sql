@@ -100,7 +100,7 @@
   {% for item in resultats %}
   <div class="result-card">
     {% if type == 'hotel' %}
-      <img src="{{ item.photos[0] }}" alt="{{ item.nom }}">
+      <img src="{{ item.photos }}" alt="{{ item.nom }}">
       <div class="result-card-body">
         <h3>{{ item.nom }}</h3>
         <p>{{ item.ville }}</p>
@@ -113,8 +113,8 @@
         <h3>{{ item.ville }}</h3>
         <p>{{ item.pays }} — {{ item.code_iata }}</p>
         <p>{{ item.aeroport }}</p>
-        <p>Prochain départ : {{ item.vols[0]['date'] }} à {{ item.vols[0]['heure_depart'] }}</p>
-        <p class="result-price">{{ item.vols[0]['prix'] }} €</p>
+        <p>Prochain départ : {{ item.date }} à {{ item.heure_depart }}</p>
+        <p class="result-price">{{ item.prix }} €</p>
       </div>
       <button class="reserve-button"><a href="/reservation/vols/{{ item.ville }}">Réserver</a></button>
     {% endif %}

@@ -50,6 +50,7 @@ def load_user(user_id):
 @app.route("/")
 def home():
 
+   
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
@@ -79,6 +80,42 @@ def home():
     finally: 
         cursor.close()
         conn.close()
+
+
+
+@app.route("/search", methods=["POST"])
+def search():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        type_recherche = request.form['type']
+
+        if type_recherche == 'hotel':
+            destination = request.form['destination_h']
+            cursor.execute("SELECT * FROM hotels WHERE ville = %s", (destination,))
+            resultats = cursor.fetchall()
+
+        else:
+            destination = request.form['destination_v']
+            cursor.execute("""
+                SELECT destinations.*, vols.date, vols.heure_depart, vols.prix, vols.compagnie
+                FROM vols
+                JOIN destinations ON vols.destination_id = destinations.id
+                WHERE destinations.pays = %s
+            """, (destination,))
+            resultats = cursor.fetchall()
+
+        return render_template('recherche.html', resultats=resultats, type=type_recherche)
+
+    finally:
+        cursor.close()
+        conn.close()
+
+        
+
+
 
     
 
