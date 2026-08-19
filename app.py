@@ -13,8 +13,6 @@ import random
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
-
-
 limiter = Limiter(app=app, key_func=get_remote_address)
 
 # "signe et sécurise les cookies de session — mettre dans un fichier .env en production" 
@@ -93,7 +91,7 @@ def search():
 
         if type_recherche == 'hotel':
             destination = request.form['destination_h']
-            cursor.execute("SELECT * FROM hotels WHERE ville = %s", (destination,))
+            cursor.execute("SELECT * FROM hotels WHERE ville = %s", (destination))
             resultats = cursor.fetchall()
 
         else:
@@ -125,15 +123,22 @@ def hotels():
     return render_template('hotels.html', hotels=cursor.fetchall())        
 
 
-@app.route("/vols_E",methods= ['GET'])
+@app.route("/vols_E", methods=['GET'])
 def vols():
-
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute("SELECT destinations.ville, destinations.pays, destinations.code_iata,destinations.aeroport, destinations.image,vols.date, vols.heure_depart, vols.prix, vols.compagnie FROM vols JOIN destinations ON vols.destination_id = destinations.id""")
 
+    try:
+        cursor.execute("""SELECT vols.id, destinations.ville, destinations.pays, destinations.code_iata,
+                                  destinations.aeroport, destinations.image,
+                                  vols.date, vols.heure_depart, vols.prix, vols.compagnie
+                           FROM vols
+                           JOIN destinations ON vols.destination_id = destinations.id""")
+        return render_template('vols.html', vols=cursor.fetchall())
+    finally:
+        cursor.close()
+        conn.close()
 
-    return render_template('vols.html', vols= cursor.fetchall())
 
 
 @app.route("/contact", methods=['GET','POST'])
@@ -197,7 +202,8 @@ def creation_compte():
             mail_user = request.form['email']
             pwd_user = request.form['password']
 
-            hash_pwd = bcrypt.hashpw(pwd_user.encode('utf-8'), bcrypt.gensalt())
+            hash_pwd = bcrypt.hashpw(pwd_user.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
 
             # attention a bien mettre le parametre '%s' pour eviter les attaques jamais mettre de f'string (f'insert to .....')
             cursor.execute(
@@ -245,11 +251,9 @@ def login_page():
                 cursor.execute("SELECT id, nom, prenom, email, mdp FROM compte_client WHERE email = %s", (user_entry,))
                 user = cursor.fetchone()
 
+                if user and bcrypt.checkpw(pwd_entry.encode('utf-8'), user[4].encode('utf-8')):
 
-                if user and bcrypt.checkpw(pwd_entry.encode('utf-8'), bytes(user[4])):
                     print('Success')
-
-
                     login_user(User(user))
                     
                     # 4. On renvoie l'objet réponse complet
@@ -267,6 +271,47 @@ def login_page():
     finally:
             cursor.close()
             conn.close()
+
+
+@app.route("/reservation/<slug>",methods= ['GET'])
+@login_required
+def hotel_cibling(slug):
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute("SELECT * FROM hotels WHERE slug = %s", (slug,))
+    hotel = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('reservation.html', hotel=hotel)
+
+
+@app.route("/reservation/vols/<int:vol_id>",methods= ['GET'])
+@login_required
+def vol_cibling(vol_id):
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("""SELECT vols.id, destinations.ville, destinations.pays, destinations.code_iata,
+                          destinations.aeroport, destinations.image,
+                          vols.date, vols.heure_depart, vols.prix, vols.compagnie
+                   FROM vols
+                   JOIN destinations ON vols.destination_id = destinations.id
+                   WHERE vols.id = %s""", (vol_id,))
+
+
+
+    list_vols = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+
+    return render_template('reservation_vol.html',vol=list_vols)
+
 
     
 

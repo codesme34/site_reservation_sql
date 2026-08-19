@@ -106,9 +106,9 @@
         <p>Pays : {{ vol.pays }}</p>
         <p>Code :{{ vol.code_iata }}</p>
         <p>Aéroport :{{ vol.aeroport }}</p>
-        <p>Date départ : {{ vol.vols[0]['date'] }}</p>
-        <p>Heure départ : {{ vol.vols[0]['heure_depart'] }}</p>
-        <p>Prix : {{ vol.vols[0]['prix']}} €</p>
+        <p>Date départ : {{ vol.date }}</p>
+        <p>Heure départ : {{ vol.heure_depart }}</p>
+        <p>Prix : {{ vol.prix}} €</p>
       </div>
     </section>
 
@@ -156,8 +156,8 @@
             <input type="hidden" name="vol_photos" value="{{vol.image}}">
             <input type="hidden" name="vol_ville" value="{{vol.ville}}">
             <input type="hidden" name="vol_pays" value="{{vol.pays}}">
-            <input type="hidden" name="vol_depart_date" value="{{vol.vols[0]['date']}}">
-            <input type="hidden" name="vol_depart_heure" value="{{vol.vols[0]['heure_depart']}}">
+            <input type="hidden" name="vol_depart_date" value="{{vol.date}}">
+            <input type="hidden" name="vol_depart_heure" value="{{vol.heure_depart}}">
             <input type="hidden" name="vol_code_iata" value="{{vol.code_iata}}">
             <input type="hidden" name="vol_aeroport" value="{{vol.aeroport}}">
 

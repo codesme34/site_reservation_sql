@@ -101,7 +101,7 @@
   <div class="reservation-page-wrapper">
     <section class="hotels-grid">
       <div class="hotel-card">
-        <img src="{{ hotel.photos[0] }}" alt="{{ hotel.nom }}" class="hotel-image">
+        <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}" class="hotel-image">
         <h2>{{ hotel.nom }}</h2>
         <p>{{ hotel.adresse }}</p>
         <p>{{ hotel.ville}}</p>
@@ -163,7 +163,7 @@
           </div>
           <div>
             
-            <input type="hidden" name="hotel_photos" value="{{hotel.photos[0]}}">
+            <input type="hidden" name="hotel_photos" value="{{hotel.photos}}">
             <input type="hidden" name="hotel_name" value="{{hotel.nom}}">
             <input type="hidden" name="hotel_adresse" value="{{hotel.adresse}}">
             <input type="hidden" name="hotel_ville" value="{{hotel.ville}}">
