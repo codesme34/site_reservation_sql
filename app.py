@@ -43,7 +43,6 @@ def load_user(user_id):
     return None
 
 
-
 @app.route("/")
 def home():
 
@@ -271,6 +270,14 @@ def login_page():
     finally:
             cursor.close()
             conn.close()
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
 
 
 @app.route("/reservation/<slug>",methods= ['GET'])

@@ -41,13 +41,21 @@
 
 
       <div class="login_side">
-
+        {% if current_user.is_authenticated %}
+        <button class="boutton_connect">
+          <a href="/logout">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Déconnexion</p>
+        </button>
+        </a>
+        {% else %}
         <button class="boutton_connect">
           <a href="/login">
             <i class="fa-solid fa-circle-user"></i>
             <p>Mon compte</p>
         </button>
         </a>
+        {% endif %}
       </div>
     </header>
 <nav class="sub-navbar">
