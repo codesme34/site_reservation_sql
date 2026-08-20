@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify,render_template,redirect,url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask import session
 from psycopg2 import errors
 from Database.db import get_connection
 from flask_login import LoginManager,UserMixin,logout_user,login_user,login_required,current_user
@@ -8,12 +9,18 @@ import bcrypt
 import os
 from psycopg2.extras import RealDictCursor
 import random
+from datetime import timedelta
+
+
 
 
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+
 limiter = Limiter(app=app, key_func=get_remote_address)
+
 
 # "signe et sécurise les cookies de session — mettre dans un fichier .env en production" 
 login_manager = LoginManager()
@@ -253,6 +260,7 @@ def login_page():
                 if user and bcrypt.checkpw(pwd_entry.encode('utf-8'), user[4].encode('utf-8')):
 
                     print('Success')
+                    session.permanent = True
                     login_user(User(user))
                     
                     # 4. On renvoie l'objet réponse complet
