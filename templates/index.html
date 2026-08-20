@@ -208,7 +208,7 @@
         {% for hotel in hotels %}
         <div class="h-card">
           <div class="h-card__img-wrap">
-            <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}">
+            <img src="{{ hotel.photos}}" alt="{{ hotel.nom }}">
             <div class="h-card__badge">Hôtel</div>
             <div class="h-card__stars">
               <i class="fa-solid fa-star"></i>
@@ -249,7 +249,7 @@
         {% for vol in vols %}
         <div class="v-card">
           <div class="v-card__img-wrap">
-            <img src="{{ vol.image }}" alt="{{ vol.ville }}">
+            <img src="{{ vol.image}}" alt="{{ vol.ville }}">
             <div class="v-card__badge">Vol direct</div>
             <div class="v-card__iata">
               {{ vol.code_iata }}
@@ -280,7 +280,7 @@
                 <span class="price-from">À partir de</span>
                 <span class="price-big">{{ vol.prix }} <small>€</small></span>
               </div>
-              <a href="/reservation/vols/{{ vol.ville }}" class="btn-reserve">
+              <a href="/reservation/vols/{{vol.id}}" class="btn-reserve">
                 Réserver <i class="fa-solid fa-arrow-right"></i>
               </a>
             </div>

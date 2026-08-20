@@ -125,27 +125,27 @@
                     <div class="card-badge hotel">Hôtel</div>
                     <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=160&h=110&fit=crop"/>
                     <div class="card-info">
-                        <h2>{{ reserves.Hotel_reserve }}</h2>
-                        <p class="card-address"><i class="fas fa-map-marker-alt"></i>{{ reserves.Adresse_H }}</p>
+                        <h2>{{ reserves.hotel_nom }}</h2>
+                        <p class="card-address"><i class="fas fa-map-marker-alt"></i>{{ reserves.hotel_adresse }}</p>
                         <div class="card-details">
-                            <span><i class="fas fa-calendar-check"></i>Arrivé {{ reserves.Date_arrivé}}</span>
-                            <span><i class="fas fa-calendar-times"></i>Départ {{ reserves.Date_de_depart }}</span>
-                            <span><i class="fas fa-moon"></i>{{ reserves.Nuit }} nuits</span>
-                            <span><i class="fas fa-user-friends"></i>{{ reserves.Nombre_adulte}} adultes</span>
-                            <span><i class="fas fa-user-friends"></i>{{ reserves.Nombre_enfants}} enfants</span>
+                            <span><i class="fas fa-calendar-check"></i>Arrivé {{ reserves.date_arrivee }}</span>
+                            <span><i class="fas fa-calendar-times"></i>Départ {{ reserves.date_depart }}</span>
+                            <span><i class="fas fa-moon"></i>{{ reserves.nombre_nuits }} nuits</span>
+                            <span><i class="fas fa-user-friends"></i>{{ reserves.nombre_adultes }} adultes</span>
+                            <span><i class="fas fa-user-friends"></i>{{ reserves.nombre_enfants }} enfants</span>
                         </div>
                         <div class="card-rating">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
                                 class="fas fa-star"></i><i class="fas fa-star"></i>
-                            <span>{{ reserves.Avis}}</span>
+                            <span>{{ reserves.hotel_avis }}</span>
                         </div>
                     </div>
                     <div class="card-price-block">
-                        <div class="price-unit">{{ reserves.Tarif_par_nuit}}€<small>/nuit</small></div>
-                        <div class="price-total">Total : <strong>{{ reserves.Tarifs}} €</strong></div>
+                        <div class="price-unit">{{ reserves.tarif_nuit }}€<small>/nuit</small></div>
+                        <div class="price-total">Total : <strong>{{ reserves.tarif_total }} €</strong></div>
                         <form action="/paiements_process" method="GET">
                         <button type="submit" class="btn-paid"><i class="fa-solid fa-credit-card"></i> Payer</button></form>
-                        <form action="/delete_H/{{ reserves._id }}" method="POST">
+                        <form action="/delete_H/{{ reserves.id }}" method="POST">
                         <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i>Supprimer</button></form>
 
                     </div>
@@ -160,23 +160,23 @@
                     <div class="card-badge hotel">Vol</div>
                     <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=160&h=110&fit=crop"/>
                     <div class="card-info">
-                        <h2>Destination: {{ vol.Vol_reserve }}</h2>
-                        <p class="card-address">Pays : {{ vol.Pays_V }}</p>
-                        <p class="card-address">Aeroport : {{ vol.Aeroport}}</p>
-                        <p class="card-address">Code : {{ vol.Code_iata }}</p>
+                        <h2>Destination: {{ vol.ville }}</h2>
+                        <p class="card-address">Pays : {{ vol.pays }}</p>
+                        <p class="card-address">Aeroport : {{ vol.aeroport }}</p>
+                        <p class="card-address">Code : {{ vol.code_iata }}</p>
                         <div class="card-details">
-                            <span><i class="fas fa-calendar-check"></i>Date de départ :  {{ vol.Date_de_depart}}</span>
-                            <span><i class="fas fa-calendar-times"></i>Heure de départ : {{ vol.Heure_depart }}</span>
-                            <span><i class="fas fa-user-friends"></i>{{ vol.Nombre_adulte}} adultes</span>
-                            <span><i class="fas fa-user-friends"></i>{{ vol.Nombre_enfants}} enfants</span>
+                            <span><i class="fas fa-calendar-check"></i>Date de départ :  {{ vol.date }}</span>
+                            <span><i class="fas fa-calendar-times"></i>Heure de départ : {{ vol.heure_depart }}</span>
+                            <span><i class="fas fa-user-friends"></i>{{ vol.nombre_adultes }} adultes</span>
+                            <span><i class="fas fa-user-friends"></i>{{ vol.nombre_enfants }} enfants</span>
                         </div>
                     </div>
                     <div class="card-price-block">
-                        <div class="price-unit">{{ vol.Prix_vol}}€ <small>/Personne</small></div>
-                        <div class="price-total">Total : <strong>{{ vol.Prix_totale}} €</strong></div>
+                        <div class="price-unit">{{ vol.prix_vol }}€ <small>/Personne</small></div>
+                        <div class="price-total">Total : <strong>{{ vol.tarif_total }} €</strong></div>
                         <form action="/paiements_process" method="GET">
                         <button type="submit" class="btn-paid"><i class="fa-solid fa-credit-card"></i> Payer</button></form>
-                        <form action="/delete_V/{{ vol._id }}" method="POST">
+                        <form action="/delete_V/{{ vol.id }}" method="POST">
                         <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i>Supprimer</button></form>
 
                     </div>

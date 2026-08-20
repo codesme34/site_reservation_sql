@@ -114,7 +114,7 @@
 
         <div class="destinations-layout">
 
-            {% if reserve %}
+            {% if reserve_hotels or reserve_vols %}
             <table class="destinations-table">
                 <thead>
                     <tr>
@@ -128,42 +128,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for paiement in reserve %}
-                    {% set details = paiement['Détails'] %}
+                    {% for reserve in reserve_hotels %}
                     <tr>
-                        {% if details.Hotel_reserve is defined %}
                         <td><span class="card-badge hotel">Hôtel</span></td>
                         <td>
-                            <strong>{{ details.Hotel_reserve }}</strong><br>
-                            <small><i class="fas fa-map-marker-alt"></i> {{ details.Adresse_H }}, {{ details.Ville_H }}</small>
+                            <strong>{{ reserve.hotel_nom }}</strong><br>
+                            <small><i class="fas fa-map-marker-alt"></i> {{ reserve.hotel_adresse }}, {{ reserve.hotel_ville }}</small>
                         </td>
                         <td>
-                            Du {{ details.Date_arrivé }} au {{ details.Date_de_depart }}<br>
-                            <small>{{ details.Nuit }} nuit(s)</small>
+                            Du {{ reserve.date_arrivee }} au {{ reserve.date_depart }}<br>
+                            <small>{{ reserve.nombre_nuits }} nuit(s)</small>
                         </td>
-                        <td>{{ details.Nombre_adulte }} adulte(s), {{ details.Nombre_enfants }} enfant(s)</td>
+                        <td>{{ reserve.nombre_adultes }} adulte(s), {{ reserve.nombre_enfants }} enfant(s)</td>
                         <td>
-                            {{ details.Tarif_par_nuit }} €/nuit<br>
-                            <strong>Total : {{ details.Tarifs }} €</strong>
+                            {{ reserve.tarif_nuit }} €/nuit<br>
+                            <strong>Total : {{ reserve.tarif_total }} €</strong>
                         </td>
-                        {% else %}
+                        <td>{{ reserve.nom }} {{ reserve.prenom }}</td>
+                        <td>{{ reserve.date_paiement.strftime('%d/%m/%Y à %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% for reserve in reserve_vols %}
+                    <tr>
                         <td><span class="card-badge vol">Vol</span></td>
                         <td>
-                            <strong>{{ details.Vol_reserve }}</strong> ({{ details.Pays_V }})<br>
-                            <small>{{ details.Aeroport }} - {{ details.Code_iata }}</small>
+                            <strong>{{ reserve.ville }}</strong> ({{ reserve.pays }})<br>
+                            <small>{{ reserve.aeroport }} - {{ reserve.code_iata }}</small>
                         </td>
                         <td>
-                            Le {{ details.Date_de_depart }}<br>
-                            <small>Départ à {{ details.Heure_depart }}</small>
+                            Le {{ reserve.date }}<br>
+                            <small>Départ à {{ reserve.heure_depart }}</small>
                         </td>
-                        <td>{{ details.Nombre_adulte }} adulte(s), {{ details.Nombre_enfants }} enfant(s)</td>
+                        <td>{{ reserve.nombre_adultes }} adulte(s), {{ reserve.nombre_enfants }} enfant(s)</td>
                         <td>
-                            {{ details.Prix_vol }} €/personne<br>
-                            <strong>Total : {{ details.Prix_totale }} €</strong>
+                            {{ reserve.prix_vol }} €/personne<br>
+                            <strong>Total : {{ reserve.tarif_total }} €</strong>
                         </td>
-                        {% endif %}
-                        <td>{{ paiement['Nom et prenom'] }}</td>
-                        <td>{{ paiement['Date de paiements'].strftime('%d/%m/%Y à %H:%M') }}</td>
+                        <td>{{ reserve.nom }} {{ reserve.prenom }}</td>
+                        <td>{{ reserve.date_paiement.strftime('%d/%m/%Y à %H:%M') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

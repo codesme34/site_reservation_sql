@@ -9,6 +9,7 @@ import bcrypt
 import os
 from psycopg2.extras import RealDictCursor
 import random
+import datetime
 from datetime import timedelta
 
 
@@ -62,11 +63,12 @@ def home():
         hot = cursor.fetchall()
 
         cursor.execute("""
-        SELECT destinations.ville, destinations.pays, destinations.code_iata,
+        SELECT vols.id, destinations.ville, destinations.pays, destinations.code_iata,
             destinations.aeroport, destinations.image,
             vols.date, vols.heure_depart, vols.prix, vols.compagnie
         FROM vols
         JOIN destinations ON vols.destination_id = destinations.id""")
+
 
 
         vol_s = cursor.fetchall()
@@ -97,17 +99,18 @@ def search():
 
         if type_recherche == 'hotel':
             destination = request.form['destination_h']
-            cursor.execute("SELECT * FROM hotels WHERE ville = %s", (destination))
+            cursor.execute("SELECT * FROM hotels WHERE ville = %s", (destination,))
             resultats = cursor.fetchall()
 
         else:
             destination = request.form['destination_v']
             cursor.execute("""
-                SELECT destinations.*, vols.date, vols.heure_depart, vols.prix, vols.compagnie
+                SELECT destinations.*, vols.id, vols.date, vols.heure_depart, vols.prix, vols.compagnie
                 FROM vols
                 JOIN destinations ON vols.destination_id = destinations.id
                 WHERE destinations.pays = %s
             """, (destination,))
+
             resultats = cursor.fetchall()
 
         return render_template('recherche.html', resultats=resultats, type=type_recherche)
@@ -327,7 +330,295 @@ def vol_cibling(vol_id):
 
     return render_template('reservation_vol.html',vol=list_vols)
 
+@app.route("/customers", methods=["POST"]) #pour l'hotel
+@login_required
+def customers():
 
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        depart_start = datetime.datetime.strptime(request.form['depart'], "%Y-%m-%d").date()
+        depart_end = datetime.datetime.strptime(request.form['sortie'], "%Y-%m-%d").date()
+        nuit = (depart_end - depart_start).days
+
+        nombre_adultes = int(request.form['adultes'])
+        nombre_enfants = int(request.form['enfants'])
+
+        nom = request.form['nom']
+        prenom = request.form['prenom']
+        adresse = request.form['adresse']
+        ville = request.form['ville']
+        code_postal = request.form['cp']
+        tel = request.form['tel']
+        mail = request.form['mail']
+
+        hotel_slug = request.form['hotel_slug']
+
+        # on ne fait jamais confiance au prix envoyé par le formulaire : on le recalcule depuis la base
+        cursor.execute("SELECT id, tarifs FROM hotels WHERE slug = %s", (hotel_slug,))
+        hotel = cursor.fetchone()
+
+        if not hotel or nuit <= 0:
+            return redirect(url_for('hotels'))
+
+        tarif_total = hotel['tarifs'] * nuit
+
+        cursor.execute("""
+            INSERT INTO reservations_hotel
+                (client_id, hotel_id, date_arrivee, date_depart, nombre_nuits,
+                 nombre_adultes, nombre_enfants, nom, prenom, adresse, ville, cp,
+                 telephone, email, tarif_total)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (current_user.id, hotel['id'], depart_start, depart_end, nuit,
+              nombre_adultes, nombre_enfants, nom, prenom, adresse, ville, code_postal,
+              tel, mail, tarif_total))
+
+        conn.commit()
+
+        return redirect(url_for('panier'))
+
+    except (KeyError, ValueError):
+        conn.rollback()
+        return redirect(url_for('hotels'))
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/customers/vol", methods=["POST"]) #pour les vols
+@login_required
+def customers_vols():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        nombre_adultes = int(request.form['adultes'])
+        nombre_enfants = int(request.form['enfants'])
+
+        nom = request.form['nom']
+        prenom = request.form['prenom']
+        adresse = request.form['adresse']
+        ville = request.form['ville']
+        code_postal = request.form['cp']
+        tel = request.form['tel']
+        mail = request.form['mail']
+
+        vol_id = int(request.form['vol_id'])
+
+        # on ne fait jamais confiance au prix envoyé par le formulaire : on le recalcule depuis la base
+        cursor.execute("SELECT id, prix FROM vols WHERE id = %s", (vol_id,))
+        vol = cursor.fetchone()
+
+        if not vol:
+            return redirect(url_for('vols'))
+
+        total_personnes = nombre_adultes + nombre_enfants
+        prix_total = vol['prix'] * total_personnes
+
+        cursor.execute("""
+            INSERT INTO reservations_vol
+                (client_id, vol_id, nombre_adultes, nombre_enfants, nom, prenom,
+                 adresse, ville, cp, telephone, email, tarif_total)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (current_user.id, vol['id'], nombre_adultes, nombre_enfants, nom, prenom,
+              adresse, ville, code_postal, tel, mail, prix_total))
+
+        conn.commit()
+
+        return redirect(url_for('panier'))
+
+    except (KeyError, ValueError):
+        conn.rollback()
+        return redirect(url_for('vols'))
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/panier", methods=['GET'])
+@login_required
+def panier():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        cursor.execute("""
+            SELECT reservations_hotel.id, reservations_hotel.date_arrivee, reservations_hotel.date_depart,
+                   reservations_hotel.nombre_nuits, reservations_hotel.nombre_adultes, reservations_hotel.nombre_enfants,
+                   reservations_hotel.tarif_total,
+                   hotels.nom AS hotel_nom, hotels.adresse AS hotel_adresse, hotels.avis AS hotel_avis,
+                   hotels.tarifs AS tarif_nuit
+            FROM reservations_hotel
+            JOIN hotels ON reservations_hotel.hotel_id = hotels.id
+            WHERE reservations_hotel.client_id = %s AND reservations_hotel.statut = 'Non payé'
+        """, (current_user.id,))
+        liste_H = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT reservations_vol.id, reservations_vol.nombre_adultes, reservations_vol.nombre_enfants,
+                   reservations_vol.tarif_total,
+                   vols.date, vols.heure_depart, vols.prix AS prix_vol,
+                   destinations.ville, destinations.pays, destinations.code_iata, destinations.aeroport
+            FROM reservations_vol
+            JOIN vols ON reservations_vol.vol_id = vols.id
+            JOIN destinations ON vols.destination_id = destinations.id
+            WHERE reservations_vol.client_id = %s AND reservations_vol.statut = 'Non payé'
+        """, (current_user.id,))
+        liste_V = cursor.fetchall()
+
+        return render_template('panier.html', reserve=liste_H, vols=liste_V)
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/delete_H/<int:id_reservation_H>', methods=['POST'])
+@login_required
+def delete_H(id_reservation_H):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        # on vérifie que la réservation appartient bien à l'utilisateur connecté (protection IDOR)
+        cursor.execute(
+            "DELETE FROM reservations_hotel WHERE id = %s AND client_id = %s",
+            (id_reservation_H, current_user.id)
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('panier'))
+
+
+@app.route('/delete_V/<int:id_reservation_V>', methods=['POST'])
+@login_required
+def delete_V(id_reservation_V):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "DELETE FROM reservations_vol WHERE id = %s AND client_id = %s",
+            (id_reservation_V, current_user.id)
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('panier'))
+
+
+@app.route("/paiements_process", methods=['GET', 'POST'])
+@login_required
+def paiement():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        cursor.execute(
+            "SELECT id FROM reservations_hotel WHERE client_id = %s AND statut = 'Non payé'",
+            (current_user.id,)
+        )
+        reservation_h = cursor.fetchone()
+
+        cursor.execute(
+            "SELECT id FROM reservations_vol WHERE client_id = %s AND statut = 'Non payé'",
+            (current_user.id,)
+        )
+        reservation_v = cursor.fetchone()
+
+        if request.method == "POST":
+            try:
+                name = request.form['nom']
+            except KeyError:
+                return render_template('paiement.html'), 400
+
+            if not reservation_h and not reservation_v:
+                return redirect(url_for('home'))
+
+            # on marque toutes les réservations en attente de ce client comme payées
+            cursor.execute(
+                "UPDATE reservations_hotel SET statut = 'Payé', date_paiement = NOW() WHERE client_id = %s AND statut = 'Non payé'",
+                (current_user.id,)
+            )
+            cursor.execute(
+                "UPDATE reservations_vol SET statut = 'Payé', date_paiement = NOW() WHERE client_id = %s AND statut = 'Non payé'",
+                (current_user.id,)
+            )
+
+            cursor.execute(
+                "INSERT INTO paiements (nom_prenom) VALUES (%s)",
+                (name,)
+            )
+
+            conn.commit()
+
+            return redirect(url_for('success'))
+
+        else:
+            if not reservation_h and not reservation_v:
+                return redirect(url_for('home'))
+
+            return render_template('paiement.html')
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/destinations', methods=['GET'])
+@login_required
+def mes_destinations():
+
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        cursor.execute("""
+            SELECT reservations_hotel.date_arrivee, reservations_hotel.date_depart,
+                   reservations_hotel.nombre_nuits, reservations_hotel.nombre_adultes, reservations_hotel.nombre_enfants,
+                   reservations_hotel.tarif_total, reservations_hotel.nom, reservations_hotel.prenom,
+                   reservations_hotel.date_paiement,
+                   hotels.nom AS hotel_nom, hotels.adresse AS hotel_adresse, hotels.ville AS hotel_ville,
+                   hotels.tarifs AS tarif_nuit
+            FROM reservations_hotel
+            JOIN hotels ON reservations_hotel.hotel_id = hotels.id
+            WHERE reservations_hotel.client_id = %s AND reservations_hotel.statut = 'Payé'
+            ORDER BY reservations_hotel.date_paiement DESC
+        """, (current_user.id,))
+        destinations_h = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT reservations_vol.nombre_adultes, reservations_vol.nombre_enfants,
+                   reservations_vol.tarif_total, reservations_vol.nom, reservations_vol.prenom,
+                   reservations_vol.date_paiement,
+                   vols.date, vols.heure_depart, vols.prix AS prix_vol,
+                   destinations.ville, destinations.pays, destinations.code_iata, destinations.aeroport
+            FROM reservations_vol
+            JOIN vols ON reservations_vol.vol_id = vols.id
+            JOIN destinations ON vols.destination_id = destinations.id
+            WHERE reservations_vol.client_id = %s AND reservations_vol.statut = 'Payé'
+            ORDER BY reservations_vol.date_paiement DESC
+        """, (current_user.id,))
+        destinations_v = cursor.fetchall()
+
+        return render_template('mes_destinations.html', reserve_hotels=destinations_h, reserve_vols=destinations_v)
+
+    finally:
+        cursor.close()
+        conn.close()
     
 
 if __name__ == "__main__":

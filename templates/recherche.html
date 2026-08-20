@@ -127,7 +127,7 @@
         <p>Prochain départ : {{ item.date }} à {{ item.heure_depart }}</p>
         <p class="result-price">{{ item.prix }} €</p>
       </div>
-      <button class="reserve-button"><a href="/reservation/vols/{{ item.ville }}">Réserver</a></button>
+      <button class="reserve-button"><a href="/reservation/vols/{{ item.id }}">Réserver</a></button>
     {% endif %}
   </div>
   {% endfor %}
