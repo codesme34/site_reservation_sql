@@ -69,6 +69,7 @@
 
             <div class="login-card">
                 <form action="/login" method="post" >
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="field-group">
                         <label>Adresse e-mail</label>
                         <input type="email" name="email_user" placeholder="jean@exemple.com" required />

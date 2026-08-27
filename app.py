@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify,render_template,redirect,url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask import session
+from flask_wtf import CSRFProtect
 from psycopg2 import errors
 from Database.db import get_connection
 from flask_login import LoginManager,UserMixin,logout_user,login_user,login_required,current_user
@@ -20,6 +21,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
+csrf = CSRFProtect(app)
 limiter = Limiter(app=app, key_func=get_remote_address)
 
 
@@ -190,7 +192,8 @@ def contact():
 #------------------Route contact----------------
 @app.route("/thankyou",methods= ['GET'])
 def success ():
-    return render_template('thankyou.html')
+    type_confirmation = request.args.get('type', 'contact')
+    return render_template('thankyou.html', type=type_confirmation)
     
 
 
@@ -332,6 +335,7 @@ def vol_cibling(vol_id):
 
 @app.route("/customers", methods=["POST"]) #pour l'hotel
 @login_required
+@limiter.limit('10 per minute')
 def customers():
 
     conn = get_connection()
@@ -354,6 +358,9 @@ def customers():
         mail = request.form['mail']
 
         hotel_slug = request.form['hotel_slug']
+
+        if nombre_adultes < 1 or nombre_enfants < 0:
+            return redirect(url_for('hotels'))
 
         # on ne fait jamais confiance au prix envoyé par le formulaire : on le recalcule depuis la base
         cursor.execute("SELECT id, tarifs FROM hotels WHERE slug = %s", (hotel_slug,))
@@ -389,6 +396,7 @@ def customers():
 
 @app.route("/customers/vol", methods=["POST"]) #pour les vols
 @login_required
+@limiter.limit('10 per minute')
 def customers_vols():
 
     conn = get_connection()
@@ -407,6 +415,9 @@ def customers_vols():
         mail = request.form['mail']
 
         vol_id = int(request.form['vol_id'])
+
+        if nombre_adultes < 1 or nombre_enfants < 0:
+            return redirect(url_for('vols'))
 
         # on ne fait jamais confiance au prix envoyé par le formulaire : on le recalcule depuis la base
         cursor.execute("SELECT id, prix FROM vols WHERE id = %s", (vol_id,))
@@ -480,6 +491,7 @@ def panier():
 
 @app.route('/delete_H/<int:id_reservation_H>', methods=['POST'])
 @login_required
+@limiter.limit('20 per minute')
 def delete_H(id_reservation_H):
 
     conn = get_connection()
@@ -501,6 +513,7 @@ def delete_H(id_reservation_H):
 
 @app.route('/delete_V/<int:id_reservation_V>', methods=['POST'])
 @login_required
+@limiter.limit('20 per minute')
 def delete_V(id_reservation_V):
 
     conn = get_connection()
@@ -521,6 +534,7 @@ def delete_V(id_reservation_V):
 
 @app.route("/paiements_process", methods=['GET', 'POST'])
 @login_required
+@limiter.limit('5 per minute', methods=['POST'])
 def paiement():
 
     conn = get_connection()
@@ -565,7 +579,7 @@ def paiement():
 
             conn.commit()
 
-            return redirect(url_for('success'))
+            return redirect(url_for('success', type='reservation'))
 
         else:
             if not reservation_h and not reservation_v:

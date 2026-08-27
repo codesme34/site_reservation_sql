@@ -125,6 +125,7 @@
     <section class="customers-info">
         <h1>Reservation en ligne ! </h1>
         <form action="/customers" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div>
             <label for="">Date de d'arrivé :</label>
             <input type="date" name="depart" placeholder="Arriver à">

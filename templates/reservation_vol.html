@@ -123,6 +123,7 @@
     <section class="customers-info">
         <h1>Reservation en ligne ! </h1>
         <form action="/customers/vol" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div>
             <label for="">Nombre d'adulte :</label>
             <input type="number" name="adultes" placeholder="Adultes">

@@ -130,7 +130,7 @@
                 <tbody>
                     {% for reserve in reserve_hotels %}
                     <tr>
-                        <td><span class="card-badge hotel">Hôtel</span></td>
+                        <td><span class="table-badge hotel">Hôtel</span></td>
                         <td>
                             <strong>{{ reserve.hotel_nom }}</strong><br>
                             <small><i class="fas fa-map-marker-alt"></i> {{ reserve.hotel_adresse }}, {{ reserve.hotel_ville }}</small>
@@ -150,7 +150,7 @@
                     {% endfor %}
                     {% for reserve in reserve_vols %}
                     <tr>
-                        <td><span class="card-badge vol">Vol</span></td>
+                        <td><span class="table-badge vol">Vol</span></td>
                         <td>
                             <strong>{{ reserve.ville }}</strong> ({{ reserve.pays }})<br>
                             <small>{{ reserve.aeroport }} - {{ reserve.code_iata }}</small>

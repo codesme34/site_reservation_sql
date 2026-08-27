@@ -108,6 +108,7 @@
     </div>
   
     <form action="/search" class="search-bar" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="field-group">
       <label>Je veux un : </label>
       <select id= 'choice' name="type">

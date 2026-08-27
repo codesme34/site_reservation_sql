@@ -151,6 +151,7 @@
       <div class="contact-form-card">
         <h2>Envoyez-nous un message</h2>
         <form action="/contact" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div class="contact-form-row">
             <div class="contact-form-group">
               <label for="nom">Nom</label>

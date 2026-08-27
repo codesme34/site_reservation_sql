@@ -146,6 +146,7 @@
                         <form action="/paiements_process" method="GET">
                         <button type="submit" class="btn-paid"><i class="fa-solid fa-credit-card"></i> Payer</button></form>
                         <form action="/delete_H/{{ reserves.id }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i>Supprimer</button></form>
 
                     </div>
@@ -177,6 +178,7 @@
                         <form action="/paiements_process" method="GET">
                         <button type="submit" class="btn-paid"><i class="fa-solid fa-credit-card"></i> Payer</button></form>
                         <form action="/delete_V/{{ vol.id }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i>Supprimer</button></form>
 
                     </div>

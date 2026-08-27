@@ -115,6 +115,7 @@
 
       <div class="payment-card">
         <form action="/paiements_process" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div class="field-group">
             <label>Nom et prenom (Figurant sur la carte) </label>
             <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z]/g,'') "name="nom" placeholder="Dupont axel" required />

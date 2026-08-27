@@ -69,6 +69,7 @@
 
             <div class="login-card">
                 <form method="post" action="/create_login">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="fields-row">
                         <div class="field-group">
                             <label>Prénom</label>

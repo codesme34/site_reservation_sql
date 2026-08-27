@@ -224,8 +224,13 @@
       </svg>
     </div>
 
+    {% if type == 'reservation' %}
+    <h1>Merci <em>pour votre réservation !</em></h1>
+    <p>Votre paiement a bien été enregistré.<br>Vous pouvez retrouver le détail dans "Mes destinations".</p>
+    {% else %}
     <h1>Merci <em>beaucoup !</em></h1>
     <p>Votre message a bien été reçu.<br>Nous reviendrons vers vous dans les plus brefs délais.</p>
+    {% endif %}
 
     <div class="divider"></div>
 
