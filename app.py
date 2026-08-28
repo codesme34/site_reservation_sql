@@ -91,6 +91,7 @@ def home():
 
 
 @app.route("/search", methods=["POST"])
+@limiter.limit('20 per minute')
 def search():
 
     conn = get_connection()
@@ -116,6 +117,9 @@ def search():
             resultats = cursor.fetchall()
 
         return render_template('recherche.html', resultats=resultats, type=type_recherche)
+
+    except KeyError:
+        return redirect(url_for('home'))
 
     finally:
         cursor.close()
