@@ -265,6 +265,7 @@ header {
   box-shadow: 0 8px 30px rgba(0,0,0,0.15);
   padding: 20px 24px;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   gap: 12px;
   z-index: 10;}
@@ -274,6 +275,10 @@ header {
   flex-direction: column;
   flex: 1;
   gap: 4px;
+}
+
+.search-bar .field-group {
+  min-width: 130px;
 }
 
 .field-group label {
@@ -289,11 +294,16 @@ header {
   height: 44px;
   border: 1px solid #000000;
   border-radius: 8px;
-  padding: 0 12px;
-  font-size: 0.9rem;
+  padding: 0 8px;
+  font-size: 1.0rem;
   outline: none;
-  
+
 }
+
+.search-bar input[type="number"] {
+  padding-right: 20px;
+}
+
 
 
 
@@ -312,6 +322,7 @@ header {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .search-bar button:hover {
@@ -957,6 +968,13 @@ header {
 }
 .fields-row .field-group {
   flex: 1;
+}
+
+@media (max-width: 480px) {
+  .fields-row {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 /* ============================================================
@@ -1969,6 +1987,8 @@ body > main {
   display: flex;
   align-items: center;
   gap: 4px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .h-card__avis i { color: var(--gold); }
 
@@ -2144,6 +2164,11 @@ body > main {
   transition: all .2s ease;
   letter-spacing: .3px;
   box-shadow: 0 4px 12px rgba(1,112,170,.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .btn-reserve:hover {
   background: linear-gradient(135deg, #0170aa, #014d78);

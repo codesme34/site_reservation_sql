@@ -15,6 +15,7 @@ from datetime import timedelta
 
 # admin avec delete , put , insert, delete hotel avec et sans frameworks,
 # ameliorer le formulaire 
+# le cookies pour accepeter ou non les cooikes....
 # la rgpd
 # pop up js 
 # utilise du js obligatoire 
@@ -219,7 +220,7 @@ def success ():
 
 
 @app.route("/create_login",methods=['POST','GET'])
-@limiter.limit('1 per minute',methods=['POST'])
+@limiter.limit('550 per minute',methods=['POST'])
 def creation_compte():
 
     conn = get_connection() # connect la db 
@@ -234,6 +235,11 @@ def creation_compte():
             prenom_user = request.form['prenom']
             mail_user = request.form['email']
             pwd_user = request.form['password']
+            confirm_pwd_user = request.form['confirm_password']
+
+            if pwd_user != confirm_pwd_user:
+                return render_template('creation_compte.html', password_mismatch=True,
+                                        nom=nom_user, prenom=prenom_user, email=mail_user), 400
 
             hash_pwd = bcrypt.hashpw(pwd_user.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
@@ -253,7 +259,8 @@ def creation_compte():
 
         except errors.UniqueViolation:
             conn.rollback()
-            return render_template('creation_compte.html', email_exists=True), 409
+            return render_template('creation_compte.html', email_exists=True,
+                                    nom=nom_user, prenom=prenom_user, email=mail_user), 409
 
 
         finally:

@@ -18,8 +18,6 @@ if (choiceEl) {
     })
 }
 
-
-
 // ──────────────────────────────────────────────
 // Popup de confirmation (toast) - formulaire de contact
 // ──────────────────────────────────────────────
@@ -57,4 +55,20 @@ if (urlParams.get('rate_limited') === '1') {
     const cleanQuery = urlParams.toString();
     const newUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '') + window.location.hash;
     window.history.replaceState({}, '', newUrl);
+}
+
+// ──────────────────────────────────────────────
+// Popup d'erreur - connexion (identifiants incorrects)
+// ──────────────────────────────────────────────
+if (document.body.dataset.loginError === 'true') {
+    showToast('Adresse mail ou mot de passe incorrect.', 'warn');
+}
+
+// ──────────────────────────────────────────────
+// Popup d'erreur - création de compte (email déjà utilisé)
+// ──────────────────────────────────────────────
+if (document.body.dataset.signupError === 'email_exists') {
+    showToast('Cette adresse mail est déjà utilisée par un compte existant.', 'warn');
+} else if (document.body.dataset.signupError === 'password_mismatch') {
+    showToast('Les mots de passe ne correspondent pas.', 'warn');
 }
