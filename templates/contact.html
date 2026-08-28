@@ -13,7 +13,7 @@
 
 </head>
 
-<body>
+<body{% if success %} data-contact-success="true"{% endif %}>
 
   <div class="sticky-wrapper">
     <header>
@@ -34,27 +34,16 @@
         </div>
       </div>
 
-      <!-- Barre de recherche à droite -->
-      <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="search" class="search-input" placeholder="Rechercher une ..." />
-      </div>
-
-
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <button class="boutton_connect">
-          <a href="/logout">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Déconnexion</p>
-        </button>
+        <a href="/logout" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Déconnexion</span>
         </a>
         {% else %}
-        <button class="boutton_connect">
-          <a href="/login">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Mon compte</p>
-        </button>
+        <a href="/login" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Mon compte</span>
         </a>
         {% endif %}
       </div>

@@ -34,27 +34,19 @@
         </div>
       </div>
 
-      <!-- Barre de recherche à droite -->
-      <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="search" class="search-input" placeholder="Rechercher une ..." />
-      </div>
+
 
 
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <button class="boutton_connect">
-          <a href="/logout">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Déconnexion</p>
-        </button>
+        <a href="/logout" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Déconnexion</span>
         </a>
         {% else %}
-        <button class="boutton_connect">
-          <a href="/login">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Mon compte</p>
-        </button>
+        <a href="/login" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Mon compte</span>
         </a>
         {% endif %}
       </div>
@@ -108,18 +100,36 @@
 
 
   <main class="reservation-page-wrapper">
-    <section class="hotels-grid">
-      <div class="hotel-card">
-        <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}" class="hotel-image">
-        <h2>{{ hotel.nom }}</h2>
-        <p>{{ hotel.adresse }}</p>
-        <p>{{ hotel.ville}}</p>
-        <p>{{ hotel.cp }}</p>
-        <p>{{ hotel.pays }}</p>
-        <p>{{ hotel.telephone }}</p>
-        <p>{{ hotel.descriptions }}</p>
-        <p>{{ hotel.avis }}</p>
-        <p>Prix : {{ hotel.tarifs }} €</p>
+    <section class="cards-grid cards-grid--single">
+      <div class="h-card">
+        <div class="h-card__img-wrap">
+          <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}">
+          <div class="h-card__badge">Hôtel</div>
+          <div class="h-card__stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-regular fa-star"></i>
+          </div>
+          <div class="h-card__img-price">{{ hotel.tarifs }} € <span>/nuit</span></div>
+        </div>
+        <div class="h-card__body">
+          <h2 class="h-card__name">{{ hotel.nom }}</h2>
+          <div class="h-card__location">
+            <i class="fa-solid fa-location-dot"></i> {{ hotel.ville }}, {{ hotel.pays }}
+          </div>
+          <div class="h-card__meta">
+            <span class="h-card__pill"><i class="fa-solid fa-building"></i> {{ hotel.cp }}</span>
+            <span class="h-card__pill"><i class="fa-solid fa-phone"></i> {{ hotel.telephone }}</span>
+          </div>
+          <p class="h-card__desc">{{ hotel.descriptions }}</p>
+          <div class="h-card__footer">
+            <div class="h-card__avis">
+              <i class="fa-solid fa-star"></i> {{ hotel.avis }}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -144,35 +154,7 @@
             <input type="number" id="enfants" name="enfants" placeholder="Mineurs">
           </div>
           <div>
-            <label for="nom">Votre nom :</label>
-            <input type="text" id="nom" name="nom" placeholder="Nom">
-          </div>
-          <div>
-            <label for="prenom">Votre prenom :</label>
-            <input type="text" id="prenom" name="prenom" placeholder="Prenom">
-          </div>
-          <div>
-            <label for="adresse">Adresse :</label>
-            <input type="text" id="adresse" name="adresse" placeholder="Adresse">
-          </div>
-          <div>
-            <label for="ville">Ville :</label>
-            <input type="text" id="ville" name="ville" placeholder="ville">
-          </div>
-          <div>
-            <label for="cp">Cp :</label>
-            <input type="text" id="cp" name="cp" placeholder="code postal">
-          </div>
-          <div>
-            <label for="tel">Votre numéro de téléphone :</label>
-            <input type="tel" id="tel" name="tel" placeholder="Telephone">
-          </div>
-          <div>
-            <label for="mail">Votre adresse mail :</label>
-            <input type="email" id="mail" name="mail" placeholder="dupont@gmail.com">
-          </div>
-          <div>
-            
+
             <input type="hidden" name="hotel_photos" value="{{hotel.photos}}">
             <input type="hidden" name="hotel_name" value="{{hotel.nom}}">
             <input type="hidden" name="hotel_adresse" value="{{hotel.adresse}}">

@@ -19,3 +19,42 @@ if (choiceEl) {
 }
 
 
+
+// ──────────────────────────────────────────────
+// Popup de confirmation (toast) - formulaire de contact
+// ──────────────────────────────────────────────
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.setAttribute('role', 'status');
+    const icon = type === 'warn' ? 'fa-triangle-exclamation' : 'fa-circle-check';
+    toast.innerHTML = '<i class="fa-solid ' + icon + '"></i> ' + message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+if (document.body.dataset.contactSuccess === 'true') {
+    showToast('Formulaire envoyé avec succès !');
+    const contactForm = document.querySelector('.contact-form-card form');
+    if (contactForm) {
+        contactForm.reset();
+    }
+}
+
+// ──────────────────────────────────────────────
+// Popup d'avertissement - rate limit dépassé
+// ──────────────────────────────────────────────
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('rate_limited') === '1') {
+    showToast('Vous avez envoyé trop de demandes, veuillez réessayer plus tard.', 'warn');
+    urlParams.delete('rate_limited');
+    const cleanQuery = urlParams.toString();
+    const newUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '') + window.location.hash;
+    window.history.replaceState({}, '', newUrl);
+}

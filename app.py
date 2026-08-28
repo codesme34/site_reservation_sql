@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify,render_template,redirect,url_for
+from flask import Flask, request, render_template,redirect,url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask import session
@@ -13,6 +13,19 @@ import random
 import datetime
 from datetime import timedelta
 
+# admin avec delete , put , insert, delete hotel avec et sans frameworks,
+# ameliorer le formulaire 
+# la rgpd
+# pop up js 
+# utilise du js obligatoire 
+# inclusitvite,navigation clavier
+# parler des alt pour le front
+# penser au gens qui sont dixelitique, non voyant etc ...
+# utiliser du js pour du carousel par exemple....
+# mettre du bouton 
+# contacte rate limit pas de pop up qui affiche un message vous avez trop essayer etc...
+#proteger du spam
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -20,6 +33,13 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 csrf = CSRFProtect(app)
 limiter = Limiter(app=app, key_func=get_remote_address)
+
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    target = request.referrer or url_for('home')
+    separator = '&' if '?' in target else '?'
+    return redirect(f"{target}{separator}rate_limited=1")
 
 
 # "signe et sécurise les cookies de session — mettre dans un fichier .env en production" 
@@ -154,7 +174,7 @@ def vols():
 
 
 @app.route("/contact", methods=['GET','POST'])
-@limiter.limit('1 per minute', methods=['POST'])
+@limiter.limit('3 per minute', methods=['POST'])
 def contact():
 
     conn = get_connection() # connect la db 
@@ -177,7 +197,7 @@ def contact():
             
             conn.commit()
 
-            return redirect(url_for('success'))
+            return render_template('contact.html', success=True)
 
         except KeyError:
             conn.rollback()
@@ -186,7 +206,7 @@ def contact():
             cursor.close()
             conn.close()
 
-    else:    
+    else:
         return render_template('contact.html')
 
 
@@ -229,11 +249,11 @@ def creation_compte():
 
         except KeyError:
             conn.rollback() # lr rollback annule la creation en cours en cas d'erreur — sans ça, la connexion reste dans un état "planté" et la prochaine requête sur cette connexion échouerait aussi.
-            return jsonify({"error": "Champ manquant dans la requête"}), 400
+            return render_template('creation_compte.html'), 400
 
         except errors.UniqueViolation:
             conn.rollback()
-            return jsonify({"error": "Cet email est déjà utilisé"}), 409
+            return render_template('creation_compte.html', email_exists=True), 409
 
 
         finally:
@@ -269,13 +289,18 @@ def login_page():
                     print('Success')
                     session.permanent = True
                     login_user(User(user))
-                    
-                    # 4. On renvoie l'objet réponse complet
+
+                    # si l'utilisateur a ete redirige vers /login depuis une page protegee (ex: reservation),
+                    # on le renvoie sur cette page apres connexion plutot que sur l'accueil
+                    next_page = request.args.get('next')
+                    if next_page and next_page.startswith('/'):
+                        return redirect(next_page)
+
                     return redirect(url_for('home'))
                 else:
                     print("Les identifiants ne correspondent pas ou l'utilisateur n'a pas de compte")
-                    
-                    return render_template('login.html') 
+
+                    return render_template('login.html', login_error=True), 401
             except KeyError:
                 return render_template('login.html'),400
 
@@ -350,14 +375,6 @@ def customers():
         nombre_adultes = int(request.form['adultes'])
         nombre_enfants = int(request.form['enfants'])
 
-        nom = request.form['nom']
-        prenom = request.form['prenom']
-        adresse = request.form['adresse']
-        ville = request.form['ville']
-        code_postal = request.form['cp']
-        tel = request.form['tel']
-        mail = request.form['mail']
-
         hotel_slug = request.form['hotel_slug']
 
         if nombre_adultes < 1 or nombre_enfants < 0:
@@ -375,12 +392,10 @@ def customers():
         cursor.execute("""
             INSERT INTO reservations_hotel
                 (client_id, hotel_id, date_arrivee, date_depart, nombre_nuits,
-                 nombre_adultes, nombre_enfants, nom, prenom, adresse, ville, cp,
-                 telephone, email, tarif_total)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                 nombre_adultes, nombre_enfants, tarif_total)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """, (current_user.id, hotel['id'], depart_start, depart_end, nuit,
-              nombre_adultes, nombre_enfants, nom, prenom, adresse, ville, code_postal,
-              tel, mail, tarif_total))
+              nombre_adultes, nombre_enfants, tarif_total))
 
         conn.commit()
 
@@ -407,14 +422,6 @@ def customers_vols():
         nombre_adultes = int(request.form['adultes'])
         nombre_enfants = int(request.form['enfants'])
 
-        nom = request.form['nom']
-        prenom = request.form['prenom']
-        adresse = request.form['adresse']
-        ville = request.form['ville']
-        code_postal = request.form['cp']
-        tel = request.form['tel']
-        mail = request.form['mail']
-
         vol_id = int(request.form['vol_id'])
 
         if nombre_adultes < 1 or nombre_enfants < 0:
@@ -432,11 +439,9 @@ def customers_vols():
 
         cursor.execute("""
             INSERT INTO reservations_vol
-                (client_id, vol_id, nombre_adultes, nombre_enfants, nom, prenom,
-                 adresse, ville, cp, telephone, email, tarif_total)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (current_user.id, vol['id'], nombre_adultes, nombre_enfants, nom, prenom,
-              adresse, ville, code_postal, tel, mail, prix_total))
+                (client_id, vol_id, nombre_adultes, nombre_enfants, tarif_total)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (current_user.id, vol['id'], nombre_adultes, nombre_enfants, prix_total))
 
         conn.commit()
 
@@ -557,25 +562,37 @@ def paiement():
         if request.method == "POST":
             try:
                 name = request.form['nom']
+                prenom = request.form['prenom']
+                adresse = request.form['adresse']
+                ville = request.form['ville']
+                code_postal = request.form['cp']
+                tel = request.form['tel']
+                mail = request.form['mail']
             except KeyError:
                 return render_template('paiement.html'), 400
 
             if not reservation_h and not reservation_v:
-                return redirect(url_for('home'))
+                return redirect(url_for('panier'))
 
             # on marque toutes les réservations en attente de ce client comme payées
-            cursor.execute(
-                "UPDATE reservations_hotel SET statut = 'Payé', date_paiement = NOW() WHERE client_id = %s AND statut = 'Non payé'",
-                (current_user.id,)
-            )
-            cursor.execute(
-                "UPDATE reservations_vol SET statut = 'Payé', date_paiement = NOW() WHERE client_id = %s AND statut = 'Non payé'",
-                (current_user.id,)
-            )
+            # et on renseigne les coordonnées du client saisies au moment du paiement
+            cursor.execute("""
+                UPDATE reservations_hotel
+                SET statut = 'Payé', date_paiement = NOW(),
+                    nom = %s, prenom = %s, adresse = %s, ville = %s, cp = %s, telephone = %s, email = %s
+                WHERE client_id = %s AND statut = 'Non payé'
+            """, (name, prenom, adresse, ville, code_postal, tel, mail, current_user.id))
+
+            cursor.execute("""
+                UPDATE reservations_vol
+                SET statut = 'Payé', date_paiement = NOW(),
+                    nom = %s, prenom = %s, adresse = %s, ville = %s, cp = %s, telephone = %s, email = %s
+                WHERE client_id = %s AND statut = 'Non payé'
+            """, (name, prenom, adresse, ville, code_postal, tel, mail, current_user.id))
 
             cursor.execute(
                 "INSERT INTO paiements (nom_prenom) VALUES (%s)",
-                (name,)
+                (f"{name} {prenom}",)
             )
 
             conn.commit()
@@ -584,7 +601,7 @@ def paiement():
 
         else:
             if not reservation_h and not reservation_v:
-                return redirect(url_for('home'))
+                return redirect(url_for('panier'))
 
             return render_template('paiement.html')
 
@@ -637,5 +654,5 @@ def mes_destinations():
     
 
 if __name__ == "__main__":
-    app.run(debug=True)#attention a ne pas mettre en true en prod !!!!!!! 
+    app.run(debug=True, host="0.0.0.0")#attention a ne pas mettre en true en prod !!!!!!! 
     

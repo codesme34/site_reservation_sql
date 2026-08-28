@@ -33,23 +33,16 @@
         </div>
       </div>
 
-      <!-- Barre de recherche à droite -->
-      <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="search" class="search-input" placeholder="Rechercher une ..." />
-      </div>
-
-
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <a href="/logout">
+        <a href="/logout" class="boutton_connect">
           <i class="fa-solid fa-circle-user"></i>
-          <p>Déconnexion</p>
+          <span>Déconnexion</span>
         </a>
         {% else %}
-        <a href="/login">
+        <a href="/login" class="boutton_connect">
           <i class="fa-solid fa-circle-user"></i>
-          <p>Mon compte</p>
+          <span>Mon compte</span>
         </a>
         {% endif %}
       </div>
@@ -223,7 +216,7 @@
             <div class="h-card__img-price">{{ hotel.tarifs }} € <span>/nuit</span></div>
           </div>
           <div class="h-card__body">
-            <div class="h-card__name">{{ hotel.nom }}</div>
+            <h3 class="h-card__name">{{ hotel.nom }}</h3>
             <div class="h-card__location">
               <i class="fa-solid fa-location-dot"></i> {{ hotel.ville }}, {{ hotel.pays }}
             </div>
@@ -263,7 +256,7 @@
           <div class="v-card__body">
             <div class="v-card__route">
               <div>
-                <div class="v-card__city">{{ vol.nom }}</div>
+                <h3 class="v-card__city">{{ vol.ville }}</h3>
                 <div class="v-card__pays">{{ vol.pays }}</div>
               </div>
               <i class="fa-solid fa-plane v-card__plane"></i>

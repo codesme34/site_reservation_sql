@@ -34,27 +34,19 @@
         </div>
       </div>
 
-      <!-- Barre de recherche à droite -->
-      <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="search" class="search-input" placeholder="Rechercher une ..." />
-      </div>
+
 
 
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <button class="boutton_connect">
-          <a href="/logout">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Déconnexion</p>
-        </button>
+        <a href="/logout" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Déconnexion</span>
         </a>
         {% else %}
-        <button class="boutton_connect">
-          <a href="/login">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Mon compte</p>
-        </button>
+        <a href="/login" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Mon compte</span>
         </a>
         {% endif %}
       </div>
@@ -108,16 +100,46 @@
 
 
   <main class="reservation-page-wrapper">
-    <section class="hotels-grid">
-      <div class="hotel-card">
-        <img src="{{ vol.image }}" alt="{{ vol.ville }}" class="hotel-image">
-        <h2>{{ vol.ville }}</h2>
-        <p>Pays : {{ vol.pays }}</p>
-        <p>Code :{{ vol.code_iata }}</p>
-        <p>Aéroport :{{ vol.aeroport }}</p>
-        <p>Date départ : {{ vol.date }}</p>
-        <p>Heure départ : {{ vol.heure_depart }}</p>
-        <p>Prix : {{ vol.prix}} €</p>
+    <section class="cards-grid cards-grid--single">
+      <div class="v-card">
+        <div class="v-card__img-wrap">
+          <img src="{{ vol.image }}" alt="{{ vol.ville }}">
+          <div class="v-card__badge">Vol direct</div>
+          <div class="v-card__iata">
+            {{ vol.code_iata }}
+            <small>{{ vol.ville }}</small>
+          </div>
+          <div class="v-card__price-badge">{{ vol.prix }} €</div>
+        </div>
+        <div class="v-card__body">
+          <div class="v-card__route">
+            <div>
+              <h2 class="v-card__city">{{ vol.ville }}</h2>
+              <div class="v-card__pays">{{ vol.pays }}</div>
+            </div>
+            <i class="fa-solid fa-plane v-card__plane"></i>
+          </div>
+          <div class="v-card__timeline">
+            <div class="v-timeline-row">
+              <i class="fa-solid fa-plane-departure"></i>
+              <span>Aéroport :</span><strong>{{ vol.aeroport }}</strong>
+            </div>
+            <div class="v-timeline-row">
+              <i class="fa-regular fa-calendar"></i>
+              <span>Date :</span><strong>{{ vol.date }}</strong>
+            </div>
+            <div class="v-timeline-row">
+              <i class="fa-regular fa-clock"></i>
+              <span>Départ :</span><strong>{{ vol.heure_depart }}</strong>
+            </div>
+          </div>
+          <div class="v-card__footer">
+            <div class="v-card__price">
+              <span class="price-from">À partir de</span>
+              <span class="price-big">{{ vol.prix }} <small>€</small></span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -134,35 +156,7 @@
             <input type="number" id="enfants" name="enfants" placeholder="Mineurs">
           </div>
           <div>
-            <label for="nom">Votre nom :</label>
-            <input type="text" id="nom" name="nom" placeholder="Nom">
-          </div>
-          <div>
-            <label for="prenom">Votre prenom :</label>
-            <input type="text" id="prenom" name="prenom" placeholder="Prenom">
-          </div>
-          <div>
-            <label for="adresse">Adresse :</label>
-            <input type="text" id="adresse" name="adresse" placeholder="Adresse">
-          </div>
-          <div>
-            <label for="ville">Ville :</label>
-            <input type="text" id="ville" name="ville" placeholder="ville">
-          </div>
-          <div>
-            <label for="cp">Cp :</label>
-            <input type="text" id="cp" name="cp" placeholder="code postal">
-          </div>
-          <div>
-            <label for="tel">Votre numéro de téléphone :</label>
-            <input type="tel" id="tel" name="tel" placeholder="Telephone">
-          </div>
-          <div>
-            <label for="mail">Votre adresse mail :</label>
-            <input type="email" id="mail" name="mail" placeholder="dupont@gmail.com">
-          </div>
-          <div>
-            
+
             <input type="hidden" name="vol_id" value="{{vol.id}}">
             <input type="hidden" name="vol_photos" value="{{vol.image}}">
             <input type="hidden" name="vol_ville" value="{{vol.ville}}">

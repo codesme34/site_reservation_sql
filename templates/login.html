@@ -14,7 +14,7 @@
 
 </head>
 
-<body>
+<body{% if login_error %} data-login-error="true"{% endif %}>
 
     <div class="sticky-wrapper">
         <header>
@@ -35,29 +35,21 @@
                 </div>
             </div>
 
-            <!-- Barre de recherche à droite -->
-            <div class="search-container">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="search" class="search-input" placeholder="Rechercher une ..." />
-            </div>
+
 
 
             <div class="login_side">
-                {% if current_user.is_authenticated %}
-                <button class="boutton_connect">
-                    <a href="/logout">
-                        <i class="fa-solid fa-circle-user"></i>
-                        <p>Déconnexion</p>
-                </button>
-                </a>
-                {% else %}
-                <button class="boutton_connect">
-                    <a href="/login">
-                        <i class="fa-solid fa-circle-user"></i>
-                        <p>Mon compte</p>
-                </button>
-                </a>
-                {% endif %}
+              {% if current_user.is_authenticated %}
+              <a href="/logout" class="boutton_connect">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>Déconnexion</span>
+              </a>
+              {% else %}
+              <a href="/login" class="boutton_connect">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>Mon compte</span>
+              </a>
+              {% endif %}
             </div>
         </header>
 
@@ -69,7 +61,7 @@
             </div>
 
             <div class="login-card">
-                <form action="/login" method="post" >
+                <form action="{{ url_for('login_page', next=request.args.get('next')) if request.args.get('next') else '/login' }}" method="post" >
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="field-group">
                         <label for="email_user">Adresse e-mail</label>

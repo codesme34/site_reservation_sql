@@ -34,27 +34,19 @@
         </div>
       </div>
 
-      <!-- Barre de recherche à droite -->
-      <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="search" class="search-input" placeholder="Rechercher une ..." />
-      </div>
+
 
 
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <button class="boutton_connect">
-          <a href="/logout">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Déconnexion</p>
-        </button>
+        <a href="/logout" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Déconnexion</span>
         </a>
         {% else %}
-        <button class="boutton_connect">
-          <a href="/login">
-            <i class="fa-solid fa-circle-user"></i>
-            <p>Mon compte</p>
-        </button>
+        <a href="/login" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Mon compte</span>
         </a>
         {% endif %}
       </div>
@@ -107,29 +99,51 @@
   </div>
 
   <main>
-  <h1 class="page-title">Nos hôtels</h1>
-
-  <section class=" hotels-grid">
-
-    {% for hotel in hotels %}
-      <div class="hotel-card">
-        <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}" class="hotel-image">
-        <h2>{{ hotel.nom }}</h2>
-        <p><strong>Adresse:</strong> {{ hotel.adresse }}</p>
-        <p><strong>Ville:</strong> {{ hotel.ville}}</p>
-        <p><strong>Cp:</strong> {{ hotel.cp }}</p>
-        <p><strong>Pays:</strong> {{ hotel.pays }}</p>
-        <p><strong>Tél:</strong> {{ hotel.telephone }}</p>
-        <p><strong>Description:</strong> {{ hotel.descriptions }}</p>
-        <p><strong>Avis:</strong> {{ hotel.avis }}</p>
-        <p>Prix : {{ hotel.tarifs }} € /nuits</p>
-        <button class="reserve-button"><a href="/reservation/{{ hotel.slug }}">Réserver</a></button>
-
-        
+  <section class="catalog-section">
+    <div class="catalog-header">
+      <div class="catalog-headline">
+        <div class="catalog-kicker">Nos destinations</div>
+        <h1 class="catalog-title">Nos <em>hôtels</em></h1>
       </div>
-    {% endfor %}
+    </div>
 
-
+    <div class="cards-grid">
+      {% for hotel in hotels %}
+      <div class="h-card">
+        <div class="h-card__img-wrap">
+          <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}">
+          <div class="h-card__badge">Hôtel</div>
+          <div class="h-card__stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-regular fa-star"></i>
+          </div>
+          <div class="h-card__img-price">{{ hotel.tarifs }} € <span>/nuit</span></div>
+        </div>
+        <div class="h-card__body">
+          <h2 class="h-card__name">{{ hotel.nom }}</h2>
+          <div class="h-card__location">
+            <i class="fa-solid fa-location-dot"></i> {{ hotel.ville }}, {{ hotel.pays }}
+          </div>
+          <div class="h-card__meta">
+            <span class="h-card__pill"><i class="fa-solid fa-building"></i> {{ hotel.cp }}</span>
+            <span class="h-card__pill"><i class="fa-solid fa-phone"></i> {{ hotel.telephone }}</span>
+          </div>
+          <p class="h-card__desc">{{ hotel.descriptions }}</p>
+          <div class="h-card__footer">
+            <div class="h-card__avis">
+              <i class="fa-solid fa-star"></i> {{ hotel.avis }}
+            </div>
+            <a href="/reservation/{{ hotel.slug }}" class="btn-reserve">
+              Réserver <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </section>
   </main>
 

@@ -319,6 +319,48 @@ header {
 
 }
 
+@media (max-width: 900px) {
+  .search-bar {
+    flex-wrap: wrap;
+    bottom: 20px;
+  }
+
+  .field-group {
+    flex: 1 1 45%;
+    min-width: 160px;
+  }
+
+  .search-bar button {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .image-accueil img {
+    height: 380px;
+  }
+
+  .search-bar {
+    position: static;
+    transform: none;
+    width: 92%;
+    max-width: none;
+    margin: 16px auto 24px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .field-group {
+    width: 100%;
+    flex: none;
+  }
+
+  .search-bar button {
+    width: 100%;
+  }
+}
+
 /* ──────────────────────────────────────────────── */
 /* SECTION HOTELS - SYSTÈME AUTO-RESPONSIVE */
 /* ──────────────────────────────────────────────── */
@@ -671,12 +713,38 @@ header {
   margin-top: 4px;
 }
 
+.payment-wrapper--split {
+  max-width: 920px;
+}
+
+.payment-columns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
 .payment-card {
   background: #fff;
   border-radius: 16px;
   padding: 36px 32px;
   box-shadow: 0 12px 40px rgba(0,0,0,0.10);
   border: 1px solid #eef2f7;
+  flex: 1 1 380px;
+}
+
+.payment-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #012b47;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-card__title i {
+  color: #01abf3;
 }
 
 .payment-card .field-group {
@@ -915,163 +983,28 @@ header {
 /* ----- Reset de base (au cas où) ----- */
 *, *::before, *::after { box-sizing: border-box; }
 
+html {
+  height: 100%;
+}
+
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: var(--color-light);
   color: var(--color-text);
   margin: 0;
-}
-
-/* ============================================================
-   HEADER
-   ============================================================ */
-.site-header {
-  background: var(--color-navy);
-  color: var(--color-white);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,.30);
-}
-
-.header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 30px;
-  gap: 20px;
-}
-
-/* Logo */
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.logo-icon {
-  font-size: 28px;
-  color: var(--color-gold);
-}
-.logo-text {
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
-}
-.logo-main {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--color-white);
-}
-.logo-sub {
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--color-gold);
-  text-transform: uppercase;
+  overflow-x: hidden;
 }
 
-/* Contact WhatsApp */
-.header-contact {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-}
-.header-contact .fa-whatsapp {
-  font-size: 28px;
-  color: #25d366;
-}
-.contact-urgency {
-  display: block;
-  font-weight: 700;
-  color: var(--color-red);
-  font-size: 15px;
-}
-.contact-phone {
-  display: block;
-  color: #ccc;
-  font-size: 13px;
+body > main {
+  flex: 1 0 auto;
 }
 
-/* Search + Account */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.site-footer {
+  flex-shrink: 0;
 }
-.search-bar {
-  display: flex;
-  align-items: center;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: 20px;
-  padding: 6px 14px;
-  gap: 8px;
-}
-.search-bar input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--color-white);
-  font-size: 13px;
-  width: 160px;
-}
-.search-bar input::placeholder { color: rgba(255,255,255,.55); }
-.search-bar i { color: rgba(255,255,255,.7); }
-
-.account-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  background: var(--color-blue);
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: var(--radius);
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 12px;
-  color: var(--color-white);
-  transition: background .2s;
-}
-.account-btn:hover { background: #234a8e; }
-.account-btn i { font-size: 18px; }
-
-/* Navigation */
-.site-nav {
-  display: flex;
-  align-items: center;
-  background: var(--color-blue);
-  padding: 0 20px;
-  overflow-x: auto;
-  gap: 2px;
-}
-.site-nav a {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: rgba(255,255,255,.88);
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .5px;
-  padding: 11px 12px;
-  white-space: nowrap;
-  transition: background .2s, color .2s;
-  border-bottom: 3px solid transparent;
-}
-.site-nav a:hover {
-  background: rgba(255,255,255,.10);
-  color: var(--color-white);
-  border-bottom-color: var(--color-gold);
-}
-.site-nav .nav-acheter {
-  margin-left: auto;
-  background: var(--color-red);
-  color: var(--color-white);
-  border-radius: 4px 4px 0 0;
-  padding: 11px 16px;
-}
-.site-nav .nav-acheter:hover { background: #c5000b; border-bottom-color: transparent; }
 
 /* ============================================================
    BREADCRUMB
@@ -1874,6 +1807,11 @@ body {
   gap: 22px;
 }
 
+.cards-grid--single {
+  grid-template-columns: minmax(300px, 380px);
+  justify-content: center;
+}
+
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
@@ -1889,7 +1827,6 @@ body {
   transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
 }
 .h-card:hover {
   transform: translateY(-7px);
@@ -1974,6 +1911,7 @@ body {
   font-weight: 700;
   color: var(--navy);
   line-height: 1.2;
+  margin: 0;
 }
 
 .h-card__location {
@@ -2046,7 +1984,6 @@ body {
   transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
 }
 .v-card:hover {
   transform: translateY(-7px);
@@ -2141,6 +2078,7 @@ body {
   font-weight: 800;
   color: var(--navy);
   flex: 1;
+  margin: 0;
 }
 .v-card__pays {
   font-size: 13px;
@@ -2299,3 +2237,49 @@ body {
   display: block;
 }
 
+
+/* ──────────────────────────────────────────────── */
+/* Popup / toast de confirmation (JS) */
+/* ──────────────────────────────────────────────── */
+
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #16764a;
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  max-width: min(90vw, 380px);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast i {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.toast-warn {
+  background: #b3401c;
+}
+
+@media (max-width: 540px) {
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
