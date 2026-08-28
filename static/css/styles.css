@@ -492,10 +492,12 @@ header {
 }
 
 .customers-info h1 {
-  font-size: 1.45rem;
-  color: #012b47;
-  font-weight: 700;
+  font-size: 1.7rem;
+  color: #fbd401;
+  font-weight: 900;
+  letter-spacing: -0.3px;
   margin-bottom: 6px;
+  text-shadow: 0 1px 0 rgba(1, 43, 71, 0.15);
 }
 
 .customers-info h1::after {
@@ -503,7 +505,7 @@ header {
   display: block;
   width: 40px;
   height: 3px;
-  background: #01abf3;
+  background: #012b47;
   border-radius: 99px;
   margin-top: 8px;
   margin-bottom: 22px;
@@ -656,9 +658,11 @@ header {
 }
 
 .payment-header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #012b47;
+  font-size: 1.7rem;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: #fbd401;
+  text-shadow: 0 1px 0 rgba(1, 43, 71, 0.15);
 }
 
 .payment-header p {
@@ -795,9 +799,11 @@ header {
   color: #01abf3;
 }
 .login-header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #012b47;
+  font-size: 1.7rem;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: #fbd401;
+  text-shadow: 0 1px 0 rgba(1, 43, 71, 0.15);
   margin-top: 8px;
 }
 .login-header p {
@@ -1097,15 +1103,51 @@ body {
 }
 
 .panier-title {
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--color-navy);
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: #fbd401;
   margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid var(--color-navy);
   display: flex;
   align-items: center;
   gap: 12px;
 }
-.panier-title i { color: var(--color-blue); }
+.panier-title i { color: var(--color-navy); }
+
+/* Titres de page (hotels, vols, recherche) */
+.page-title {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: #fbd401;
+  margin: 30px 5% 0;
+  padding-bottom: 14px;
+  border-bottom: 3px solid var(--color-navy);
+  display: inline-block;
+}
+
+/* Titre en overlay sur l'image d'accueil */
+.image-accueil {
+  position: relative;
+}
+.hero-title {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 720px;
+  text-align: center;
+  color: #fbd401;
+  font-size: clamp(28px, 4.5vw, 46px);
+  font-weight: 900;
+  line-height: 1.2;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.65);
+  z-index: 2;
+}
 .panier-count {
   font-size: 14px;
   font-weight: 600;
