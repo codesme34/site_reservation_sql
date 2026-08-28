@@ -105,6 +105,7 @@
     </nav>
   </div>
 
+  <main>
   <section>
     <div class="payment-wrapper">
       <div class="payment-header">
@@ -117,21 +118,21 @@
         <form action="/paiements_process" method="post">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div class="field-group">
-            <label>Nom et prenom (Figurant sur la carte) </label>
-            <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z]/g,'') "name="nom" placeholder="Dupont axel" required />
+            <label for="nom">Nom et prenom (Figurant sur la carte) </label>
+            <input type="text" id="nom" oninput="this.value = this.value.replace(/[^a-zA-Z]/g,'') "name="nom" placeholder="Dupont axel" required />
           </div>
           <div class="field-group">
-            <label>Numéro de carte</label>
-            <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g,'').match(/.{1,4}/g)?.join(' ') || '' " name="numero_cb" placeholder="1234 5678 9012 3456" maxlength="19" required />
+            <label for="numero_cb">Numéro de carte</label>
+            <input type="text" id="numero_cb" oninput="this.value = this.value.replace(/[^0-9]/g,'').match(/.{1,4}/g)?.join(' ') || '' " name="numero_cb" placeholder="1234 5678 9012 3456" maxlength="19" required />
           </div>
           <div class="fields-row">
             <div class="field-group">
-              <label>Mois / Année</label>
-              <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g,'').match(/.{1,2}/g)?.join('/') || '' " name="expiry"  placeholder="MM/AA" maxlength="5" required />
+              <label for="expiry">Mois / Année</label>
+              <input type="text" id="expiry" oninput="this.value = this.value.replace(/[^0-9]/g,'').match(/.{1,2}/g)?.join('/') || '' " name="expiry"  placeholder="MM/AA" maxlength="5" required />
             </div>
             <div class="field-group">
-              <label>CVV</label>
-              <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g,'')" name="cvv"  placeholder="123" maxlength="3" required />
+              <label for="cvv">CVV</label>
+              <input type="text" id="cvv" oninput="this.value = this.value.replace(/[^0-9]/g,'')" name="cvv"  placeholder="123" maxlength="3" required />
             </div>
           </div>
           <hr class="divider">
@@ -145,6 +146,7 @@
 
 
   </section>
+  </main>
 
   <script src="static/js/script.js"></script>
 </body>

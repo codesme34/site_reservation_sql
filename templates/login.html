@@ -60,7 +60,7 @@
             </div>
         </header>
 
-        <div class="login-wrapper">
+        <main class="login-wrapper">
             <div class="login-header">
                 <i class="fa-regular fa-circle-user login-avatar"></i>
                 <h1>Connexion</h1>
@@ -71,12 +71,12 @@
                 <form action="/login" method="post" >
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="field-group">
-                        <label>Adresse e-mail</label>
-                        <input type="email" name="email_user" placeholder="jean@exemple.com" required />
+                        <label for="email_user">Adresse e-mail</label>
+                        <input type="email" id="email_user" name="email_user" placeholder="jean@exemple.com" required />
                     </div>
                     <div class="field-group">
-                        <label>Mot de passe</label>
-                        <input type="password" name="password" placeholder="••••••••" required />
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required />
                     </div>
                      <div class="forgot-link">Mot de passe oublié ?</div>
                     <button type="submit">Se connecter</button>
@@ -84,7 +84,7 @@
                 <hr class="divider">
                 <p class="login-footer">Pas encore de compte ? <a href="/create_login">Créer un compte</a></p>
             </div>
-        </div>
+        </main>
 
 
 </body>

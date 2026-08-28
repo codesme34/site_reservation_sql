@@ -101,16 +101,17 @@
 
 
 
+  <main>
   <section class="hero-section">
     <div class="image-accueil">
-      <img src="static/assets/images/main2.webp" alt="Un couple regardant le coucher de soleil">
+      <img src="static/assets/images/main2.webp" alt="Un couple regardant le coucher de soleil" width="1456" height="816">
       <h1 class="hero-title">Réservez votre hôtel ou votre vol au meilleur prix</h1>
     </div>
   
     <form action="/search" class="search-bar" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="field-group">
-      <label>Je veux un : </label>
+      <label for="choice">Je veux un : </label>
       <select id= 'choice' name="type">
         <option value="hotel">Hotel</option>
         <option value="vol">Vol</option>
@@ -119,8 +120,8 @@
 
       
       <div class="field-group">
-        <label>Destination</label>
-        <select  id='dest-hotel'name="destination_h">
+        <label for="dest-hotel">Destination</label>
+        <select  id='dest-hotel'name="destination_h" aria-label="Destination hôtel">
           <option value="Annecy">Annecy</option>
           <option value="Beaune">Beaune</option>
           <option value="Biarritz">Biarritz</option>
@@ -142,7 +143,7 @@
           <option value="Toulouse">Toulouse</option>
           <option value="Tournon-sur-Rhône">Tournon-sur-Rhône</option>
         </select>
-        <select id='dest-vol' name="destination_v" style="display: none">
+        <select id='dest-vol' name="destination_v" style="display: none" aria-label="Destination vol">
           <option value="Allemagne">Allemagne</option>
           <option value="Autriche">Autriche</option>
           <option value="Croatie">Croatie</option>
@@ -165,16 +166,16 @@
       </div>
       
       <div class="field-group">
-        <label>Départ</label>
-        <input type="date" name="date_depart">
+        <label for="date_depart">Départ</label>
+        <input type="date" id="date_depart" name="date_depart">
       </div>
       <div class="field-group">
-        <label>Nombre d'adulte</label>
-        <input type="number" name="adultes">
+        <label for="adultes">Nombre d'adulte</label>
+        <input type="number" id="adultes" name="adultes">
       </div>
       <div class="field-group">
-        <label>Nombre d'enfant</label>
-        <input type="number" name="enfants">
+        <label for="enfants">Nombre d'enfant</label>
+        <input type="number" id="enfants" name="enfants">
       </div>
       <button type="submit">PROCEED TO RESULTS</button>
       </div>
@@ -292,7 +293,7 @@
     </div>
 
   </section>
- 
+  </main>
 
   <script src="static/js/script.js"></script>
 </body>

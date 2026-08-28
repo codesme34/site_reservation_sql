@@ -106,7 +106,7 @@
   </div>
 
 
-  <div class="reservation-page-wrapper">
+  <main class="reservation-page-wrapper">
     <section class="hotels-grid">
       <div class="hotel-card">
         <img src="{{ vol.image }}" alt="{{ vol.ville }}" class="hotel-image">
@@ -125,40 +125,40 @@
         <form action="/customers/vol" method="post">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div>
-            <label for="">Nombre d'adulte :</label>
-            <input type="number" name="adultes" placeholder="Adultes">
+            <label for="adultes">Nombre d'adulte :</label>
+            <input type="number" id="adultes" name="adultes" placeholder="Adultes">
           </div>
           <div>
-            <label for="">Nombre d'enfants :</label>
-            <input type="number" name="enfants" placeholder="Mineurs">
+            <label for="enfants">Nombre d'enfants :</label>
+            <input type="number" id="enfants" name="enfants" placeholder="Mineurs">
           </div>
           <div>
-            <label for="">Votre nom :</label>
-            <input type="text" name="nom" placeholder="Nom">
+            <label for="nom">Votre nom :</label>
+            <input type="text" id="nom" name="nom" placeholder="Nom">
           </div>
           <div>
-            <label for="">Votre prenom :</label>
-            <input type="text" name="prenom" placeholder="Prenom">
+            <label for="prenom">Votre prenom :</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Prenom">
           </div>
           <div>
-            <label for="">Adresse :</label>
-            <input type="text" name="adresse" placeholder="Adresse">
+            <label for="adresse">Adresse :</label>
+            <input type="text" id="adresse" name="adresse" placeholder="Adresse">
           </div>
           <div>
-            <label for="">Ville :</label>
-            <input type="text" name="ville" placeholder="ville">
+            <label for="ville">Ville :</label>
+            <input type="text" id="ville" name="ville" placeholder="ville">
           </div>
           <div>
-            <label for="">Cp :</label>
-            <input type="text" name="cp" placeholder="code postal">
+            <label for="cp">Cp :</label>
+            <input type="text" id="cp" name="cp" placeholder="code postal">
           </div>
           <div>
-            <label for="">Votre numéro de téléphone :</label>
-            <input type="tel" name="tel" placeholder="Telephone">
+            <label for="tel">Votre numéro de téléphone :</label>
+            <input type="tel" id="tel" name="tel" placeholder="Telephone">
           </div>
           <div>
-            <label for="">Votre adresse mail :</label>
-            <input type="email" name="mail" placeholder="dupont@gmail.com">
+            <label for="mail">Votre adresse mail :</label>
+            <input type="email" id="mail" name="mail" placeholder="dupont@gmail.com">
           </div>
           <div>
             
@@ -178,7 +178,7 @@
 
         </form>
       </section>
-  </div>
+  </main>
 
   <script src="/static/js/script.js"></script>
 </body>
