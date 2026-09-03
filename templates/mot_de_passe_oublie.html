@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Connectez-vous à votre compte Airlines Reservation pour accéder à vos réservations.">
+    <meta name="description" content="Réinitialisez le mot de passe de votre compte Airlines Reservation.">
     <meta name="robots" content="noindex, nofollow">
-    <title>Connexion | Airlines Reservation</title>
+    <title>Mot de passe oublié | Airlines Reservation</title>
     <link rel="canonical" href="{{ request.base_url }}">
     <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
@@ -14,7 +14,7 @@
 
 </head>
 
-<body{% if login_error %} data-login-error="true"{% endif %}>
+<body{% if success %} data-forgot-success="true"{% endif %}>
 
     <div class="sticky-wrapper">
         <header>
@@ -34,9 +34,6 @@
                     <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
                 </div>
             </div>
-
-
-
 
             <div class="login_side">
               {% if current_user.is_authenticated %}
@@ -64,27 +61,29 @@
 
         <main class="login-wrapper">
             <div class="login-header">
-                <i class="fa-regular fa-circle-user login-avatar"></i>
-                <h1>Connexion</h1>
-                <p>Accédez à votre espace personnel</p>
+                <i class="fa-solid fa-key login-avatar"></i>
+                <h1>Mot de passe oublié</h1>
+                <p>Indiquez votre email, nous vous enverrons un lien de réinitialisation</p>
             </div>
 
             <div class="login-card">
-                <form action="{{ url_for('login_page', next=request.args.get('next')) if request.args.get('next') else '/login' }}" method="post" >
+                {% if success %}
+                <p class="forgot-confirmation">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Si un compte existe avec cette adresse, un email contenant un lien de réinitialisation vient de vous être envoyé. Pensez à vérifier vos spams.
+                </p>
+                {% else %}
+                <form action="/mot-de-passe-oublie" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="field-group">
-                        <label for="email_user">Adresse e-mail</label>
-                        <input type="text" id="email_user" name="email_user" placeholder="jean@exemple.com" required />
+                        <label for="email">Adresse e-mail</label>
+                        <input type="email" id="email" name="email" placeholder="jean@exemple.com" required />
                     </div>
-                    <div class="field-group">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required />
-                    </div>
-                     <a href="/mot-de-passe-oublie" class="forgot-link">Mot de passe oublié ?</a>
-                    <button type="submit">Se connecter</button>
+                    <button type="submit">Envoyer le lien de réinitialisation</button>
                 </form>
+                {% endif %}
                 <hr class="divider">
-                <p class="login-footer">Pas encore de compte ? <a href="/create_login">Créer un compte</a></p>
+                <p class="login-footer"><a href="/login">Retour à la connexion</a></p>
             </div>
         </main>
 

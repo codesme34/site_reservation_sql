@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Connectez-vous à votre compte Airlines Reservation pour accéder à vos réservations.">
+    <meta name="description" content="Choisissez un nouveau mot de passe pour votre compte Airlines Reservation.">
     <meta name="robots" content="noindex, nofollow">
-    <title>Connexion | Airlines Reservation</title>
+    <title>Nouveau mot de passe | Airlines Reservation</title>
     <link rel="canonical" href="{{ request.base_url }}">
     <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
@@ -14,7 +14,7 @@
 
 </head>
 
-<body{% if login_error %} data-login-error="true"{% endif %}>
+<body{% if reset_error %} data-reset-error="true"{% endif %}>
 
     <div class="sticky-wrapper">
         <header>
@@ -35,56 +35,44 @@
                 </div>
             </div>
 
-
-
-
             <div class="login_side">
-              {% if current_user.is_authenticated %}
-              <div class="account-menu">
-                <button type="button" class="boutton_connect account-menu__toggle" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa-solid fa-circle-user"></i>
-                  <i class="fa-solid fa-chevron-down account-menu__caret"></i>
-                </button>
-                <div class="account-menu__dropdown">
-                  <a href="/profil"><i class="fa-solid fa-user"></i> Mon profil</a>
-                  {% if current_user.is_admin %}
-                  <a href="/admin/comptes"><i class="fa-solid fa-user-shield"></i> Administration</a>
-                  {% endif %}
-                  <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
-                </div>
-              </div>
-              {% else %}
               <a href="/login" class="boutton_connect">
                 <i class="fa-solid fa-circle-user"></i>
                 <span>Mon compte</span>
               </a>
-              {% endif %}
             </div>
         </header>
 
         <main class="login-wrapper">
             <div class="login-header">
-                <i class="fa-regular fa-circle-user login-avatar"></i>
-                <h1>Connexion</h1>
-                <p>Accédez à votre espace personnel</p>
+                <i class="fa-solid fa-lock login-avatar"></i>
+                <h1>Nouveau mot de passe</h1>
+                <p>Choisissez un nouveau mot de passe pour votre compte</p>
             </div>
 
             <div class="login-card">
-                <form action="{{ url_for('login_page', next=request.args.get('next')) if request.args.get('next') else '/login' }}" method="post" >
+                {% if token_valide %}
+                <form action="/reinitialiser-mot-de-passe/{{ token }}" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="field-group">
-                        <label for="email_user">Adresse e-mail</label>
-                        <input type="text" id="email_user" name="email_user" placeholder="jean@exemple.com" required />
+                        <label for="password">Nouveau mot de passe</label>
+                        <input type="password" id="password" name="password" minlength="8" placeholder="••••••••" required />
                     </div>
                     <div class="field-group">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required />
+                        <label for="confirm_password">Confirmer le mot de passe</label>
+                        <input type="password" id="confirm_password" name="confirm_password" minlength="8" placeholder="••••••••" required />
                     </div>
-                     <a href="/mot-de-passe-oublie" class="forgot-link">Mot de passe oublié ?</a>
-                    <button type="submit">Se connecter</button>
+                    <button type="submit">Réinitialiser mon mot de passe</button>
                 </form>
+                {% else %}
+                <p class="forgot-confirmation forgot-confirmation--error">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Ce lien de réinitialisation est invalide ou a expiré. Merci de refaire une demande.
+                </p>
+                <p class="login-footer"><a href="/mot-de-passe-oublie">Refaire une demande</a></p>
+                {% endif %}
                 <hr class="divider">
-                <p class="login-footer">Pas encore de compte ? <a href="/create_login">Créer un compte</a></p>
+                <p class="login-footer"><a href="/login">Retour à la connexion</a></p>
             </div>
         </main>
 

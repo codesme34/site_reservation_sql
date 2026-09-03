@@ -5,6 +5,33 @@ function switchTab(tab) {
         b.classList.toggle('active', b.dataset.tab === tab);
       });
     }
+// ──────────────────────────────────────────────
+// Nav mobile : bouton "voir plus" (Accueil/Vols/Hôtels visibles, le reste replié)
+// ──────────────────────────────────────────────
+const navToggle = document.querySelector('.nav-more-toggle');
+if (navToggle) {
+    navToggle.addEventListener('click', function () {
+        const nav = document.querySelector('.sub-navbar');
+        const isExpanded = nav.classList.toggle('expanded');
+        navToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    });
+}
+
+// ──────────────────────────────────────────────
+// Barre de recherche mobile : bouton "Afficher les options de recherche"
+// ──────────────────────────────────────────────
+const searchToggle = document.querySelector('.search-bar-toggle');
+if (searchToggle) {
+    searchToggle.addEventListener('click', function () {
+        const searchBar = document.querySelector('.search-bar');
+        const isExpanded = searchBar.classList.toggle('expanded');
+        searchToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        searchToggle.querySelector('span').textContent = isExpanded
+            ? 'Masquer les options de recherche'
+            : 'Afficher les options de recherche';
+    });
+}
+
 const choiceEl = document.getElementById("choice")
 if (choiceEl) {
     choiceEl.addEventListener("change", function() {
@@ -80,6 +107,17 @@ const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('rate_limited') === '1') {
     showToast('Vous avez envoyé trop de demandes, veuillez réessayer plus tard.', 'warn');
     urlParams.delete('rate_limited');
+    const cleanQuery = urlParams.toString();
+    const newUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '') + window.location.hash;
+    window.history.replaceState({}, '', newUrl);
+}
+
+// ──────────────────────────────────────────────
+// Popup de confirmation - mot de passe reinitialise
+// ──────────────────────────────────────────────
+if (urlParams.get('reset') === '1') {
+    showToast('Mot de passe réinitialisé avec succès. Connectez-vous.');
+    urlParams.delete('reset');
     const cleanQuery = urlParams.toString();
     const newUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '') + window.location.hash;
     window.history.replaceState({}, '', newUrl);

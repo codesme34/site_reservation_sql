@@ -66,7 +66,7 @@
         <i class="fa-solid fa-plane"></i>
         <span>VOLS</span>
       </a>
-      <a href="#vol-hotel">
+      <a href="#vol-hotel" class="nav-more">
         <i class="fa-solid fa-plane-departure"></i>
         <span>VOL + HÔTEL</span>
       </a>
@@ -74,27 +74,30 @@
         <i class="fa-solid fa-house-user"></i>
         <span>HÔTELS</span>
       </a>
-      <a href="#location-voiture">
+      <a href="#location-voiture" class="nav-more">
         <i class="fa-solid fa-car"></i>
         <span>LOCATION VOITURE</span>
       </a>
-      <a href="#offres">
+      <a href="#offres" class="nav-more">
         <i class="fa-solid fa-fire"></i>
         <span>OFFRES</span>
       </a>
 
-      <a href="/contact">
+      <a href="/contact" class="nav-more">
         <i class="fa-solid fa-envelope"></i>
         <span>CONTACT</span>
       </a>
-      <a href="/destinations">
+      <a href="/destinations" class="nav-more">
         <i class="fa-solid fa-earth-americas"></i>
         <span>MES_DESTINATIONS</span>
       </a>
-      <a href="/panier">
+      <a href="/panier" class="nav-more">
         <i class="fa-solid fa-shopping-cart"></i>
         <span>Panier</span>
       </a>
+    <button type="button" class="nav-more-toggle" aria-expanded="false" aria-label="Voir plus de liens">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
     </nav>
   </div>
 
@@ -108,32 +111,34 @@
 
       <section>
         <h2>Données que nous collectons</h2>
-        <table class="legal-table">
-          <thead>
-            <tr>
-              <th>Formulaire</th>
-              <th>Données collectées</th>
-              <th>Finalité</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Création de compte</td>
-              <td>Nom, prénom, email, mot de passe (haché, jamais stocké en clair)</td>
-              <td>Créer et sécuriser votre espace personnel</td>
-            </tr>
-            <tr>
-              <td>Contact</td>
-              <td>Nom, prénom, téléphone, email, message</td>
-              <td>Répondre à votre demande</td>
-            </tr>
-            <tr>
-              <td>Paiement / réservation</td>
-              <td>Nom, prénom, adresse, ville, code postal, téléphone, email</td>
-              <td>Finaliser votre réservation</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="legal-table-wrap">
+          <table class="legal-table">
+            <thead>
+              <tr>
+                <th>Formulaire</th>
+                <th>Données collectées</th>
+                <th>Finalité</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Création de compte</td>
+                <td>Nom, prénom, email, mot de passe (haché, jamais stocké en clair)</td>
+                <td>Créer et sécuriser votre espace personnel</td>
+              </tr>
+              <tr>
+                <td>Contact</td>
+                <td>Nom, prénom, téléphone, email, message</td>
+                <td>Répondre à votre demande</td>
+              </tr>
+              <tr>
+                <td>Paiement / réservation</td>
+                <td>Nom, prénom, adresse, ville, code postal, téléphone, email</td>
+                <td>Finaliser votre réservation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <p>Le formulaire de paiement demande également un numéro de carte, une date d'expiration et un CVV : il s'agit d'une simulation pédagogique, ces informations ne sont jamais enregistrées en base de données ni transmises à un tiers.</p>
       </section>
 

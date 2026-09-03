@@ -66,7 +66,7 @@
         <i class="fa-solid fa-plane"></i>
         <span>VOLS</span>
       </a>
-      <a href="#vol-hotel">
+      <a href="#vol-hotel" class="nav-more">
         <i class="fa-solid fa-plane-departure"></i>
         <span>VOL + HÔTEL</span>
       </a>
@@ -74,28 +74,31 @@
         <i class="fa-solid fa-house-user"></i>
         <span>HÔTELS</span>
       </a>
-      <a href="#location-voiture">
+      <a href="#location-voiture" class="nav-more">
         <i class="fa-solid fa-car"></i>
         <span>LOCATION VOITURE</span>
       </a>
 
-      <a href="#offres">
+      <a href="#offres" class="nav-more">
         <i class="fa-solid fa-fire"></i>
         <span>OFFRES</span>
       </a>
 
-      <a href="/contact">
+      <a href="/contact" class="nav-more">
         <i class="fa-solid fa-envelope"></i>
         <span>CONTACT</span>
       </a>
-      <a href="/destinations">
+      <a href="/destinations" class="nav-more">
         <i class="fa-solid fa-earth-americas"></i>
         <span>MES_DESTINATIONS</span>
       </a>
-      <a href="/panier">
+      <a href="/panier" class="nav-more">
         <i class="fa-solid fa-shopping-cart"></i>
         <span>Panier</span>
       </a>
+    <button type="button" class="nav-more-toggle" aria-expanded="false" aria-label="Voir plus de liens">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
     </nav>
   </div>
 
@@ -104,7 +107,10 @@
   <main>
   <section class="hero-section">
     <div class="image-accueil">
-      <img src="static/assets/images/main2.webp" alt="Un couple regardant le coucher de soleil" width="1456" height="816">
+      <picture>
+        <source media="(max-width: 540px)" srcset="static/assets/images/mobile.webp">
+        <img src="static/assets/images/main2.webp" alt="Un couple regardant le coucher de soleil" width="1456" height="816">
+      </picture>
       <h1 class="hero-title">Réservez votre hôtel ou votre vol au meilleur prix</h1>
     </div>
   
@@ -118,7 +124,12 @@
       </select>
       </div>
 
-      
+      <button type="button" class="search-bar-toggle" aria-expanded="false">
+        <span>Afficher les options de recherche</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+
+      <div class="search-bar-extra">
       <div class="field-group">
         <label for="dest-hotel">Destination</label>
         <select  id='dest-hotel'name="destination_h" aria-label="Destination hôtel">
@@ -178,6 +189,7 @@
         <input type="text" id="enfants" name="enfants">
       </div>
       <button type="submit">Rechercher</button>
+      </div>
       </div>
     </form>
   
