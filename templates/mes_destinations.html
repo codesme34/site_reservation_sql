@@ -46,6 +46,9 @@
                 </button>
                 <div class="account-menu__dropdown">
                   <a href="/profil"><i class="fa-solid fa-user"></i> Mon profil</a>
+                  {% if current_user.is_admin %}
+                  <a href="/admin/comptes"><i class="fa-solid fa-user-shield"></i> Administration</a>
+                  {% endif %}
                   <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
                 </div>
               </div>

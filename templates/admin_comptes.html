@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Administration des comptes clients Airlines Reservation.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard admin | Airlines Reservation</title>
+  <link rel="canonical" href="{{ request.base_url }}">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+</head>
+
+<body class="admin-body">
+
+  <div class="admin-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__brand">
+        <img src="/static/assets/images/logo_avion.webp" alt="Logo">
+        <span>Administration</span>
+      </div>
+
+      <nav class="admin-sidebar__nav">
+        <a href="/admin/comptes" class="active">
+          <i class="fa-solid fa-users"></i> Comptes clients
+        </a>
+      </nav>
+
+      <div class="admin-sidebar__footer">
+        <div class="admin-sidebar__user">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>{{ current_user.prenom }} {{ current_user.nom }}</span>
+        </div>
+        <a href="/logout" class="admin-sidebar__logout">
+          <i class="fa-solid fa-right-from-bracket"></i> Se déconnecter
+        </a>
+      </div>
+    </aside>
+
+    <!-- ===== CONTENU ===== -->
+    <main class="admin-content">
+      <div class="admin-header">
+        <h1 class="admin-page-title"><i class="fa-solid fa-users"></i> Comptes clients</h1>
+        <button type="button" id="btn-open-create" class="admin-btn-add">
+          <i class="fa-solid fa-user-plus"></i> Ajouter un compte
+        </button>
+      </div>
+
+      {% if comptes|length == 0 %}
+      <p class="admin-empty">Aucun compte pour le moment.</p>
+      {% else %}
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th>Inscription</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for compte in comptes %}
+            <tr data-id="{{ compte.id }}"
+                data-nom="{{ compte.nom }}"
+                data-prenom="{{ compte.prenom }}"
+                data-email="{{ compte.email }}"
+                data-is-admin="{{ 'true' if compte.is_admin else 'false' }}">
+              <td>{{ compte.id }}</td>
+              <td>{{ compte.nom }}</td>
+              <td>{{ compte.prenom }}</td>
+              <td>{{ compte.email }}</td>
+              <td>
+                {% if compte.is_admin %}
+                <span class="admin-badge admin-badge--admin">Admin</span>
+                {% else %}
+                <span class="admin-badge">Client</span>
+                {% endif %}
+              </td>
+              <td>{{ compte.date_inscription.strftime('%d/%m/%Y') if compte.date_inscription else '—' }}</td>
+              <td class="admin-table__actions">
+                <button type="button" class="admin-icon-btn admin-icon-btn--edit" title="Modifier">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                {% if compte.id|string != current_user.id %}
+                <button type="button" class="admin-icon-btn admin-icon-btn--delete" title="Supprimer">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </main>
+  </div>
+
+  <!-- ===== MODALE CREATION / EDITION ===== -->
+  <div id="modal-overlay" class="admin-modal-overlay" hidden>
+    <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="admin-modal__header">
+        <h2 id="modal-title">Ajouter un compte</h2>
+        <button type="button" id="modal-close" class="admin-modal__close" aria-label="Fermer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="form-compte">
+        <input type="hidden" id="compte_id" value="">
+        <div class="fields-row">
+          <div class="field-group">
+            <label for="modal_nom">Nom</label>
+            <input type="text" id="modal_nom" required>
+          </div>
+          <div class="field-group">
+            <label for="modal_prenom">Prénom</label>
+            <input type="text" id="modal_prenom" required>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="modal_email">Adresse e-mail</label>
+          <input type="email" id="modal_email" required>
+        </div>
+        <div class="field-group">
+          <label for="modal_password" id="label_password">Mot de passe</label>
+          <input type="password" id="modal_password" minlength="8">
+        </div>
+        <div class="field-group field-group--checkbox">
+          <label for="modal_is_admin">
+            <input type="checkbox" id="modal_is_admin">
+            Compte administrateur
+          </label>
+        </div>
+        <button type="submit" id="modal-submit">Créer le compte</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/js/script.js"></script>
+  <script>
+    const CSRF_TOKEN = "{{ csrf_token() }}";
+
+    async function apiRequest(url, method, payload) {
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': CSRF_TOKEN
+        },
+        body: JSON.stringify(payload)
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) { /* pas de corps JSON */ }
+      return { ok: res.ok, status: res.status, data: data };
+    }
+
+    const overlay = document.getElementById('modal-overlay');
+    const form = document.getElementById('form-compte');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSubmit = document.getElementById('modal-submit');
+    const labelPassword = document.getElementById('label_password');
+    const idField = document.getElementById('compte_id');
+
+    function openModal(mode, data) {
+      form.reset();
+      idField.value = '';
+      const passwordInput = document.getElementById('modal_password');
+      if (mode === 'create') {
+        modalTitle.textContent = 'Ajouter un compte';
+        modalSubmit.textContent = 'Créer le compte';
+        passwordInput.required = true;
+        passwordInput.placeholder = '';
+        labelPassword.textContent = 'Mot de passe';
+      } else {
+        modalTitle.textContent = 'Modifier le compte';
+        modalSubmit.textContent = 'Enregistrer les modifications';
+        passwordInput.required = false;
+        passwordInput.placeholder = 'Laisser vide pour ne pas changer';
+        labelPassword.textContent = 'Nouveau mot de passe (optionnel)';
+        idField.value = data.id;
+        document.getElementById('modal_nom').value = data.nom;
+        document.getElementById('modal_prenom').value = data.prenom;
+        document.getElementById('modal_email').value = data.email;
+        document.getElementById('modal_is_admin').checked = data.isAdmin === 'true';
+      }
+      overlay.hidden = false;
+    }
+
+    function closeModal() {
+      overlay.hidden = true;
+    }
+
+    document.getElementById('btn-open-create').addEventListener('click', () => openModal('create'));
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !overlay.hidden) closeModal();
+    });
+
+    document.querySelectorAll('.admin-icon-btn--edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('tr');
+        openModal('edit', {
+          id: row.dataset.id,
+          nom: row.dataset.nom,
+          prenom: row.dataset.prenom,
+          email: row.dataset.email,
+          isAdmin: row.dataset.isAdmin
+        });
+      });
+    });
+
+    document.querySelectorAll('.admin-icon-btn--delete').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const row = btn.closest('tr');
+        const id = row.dataset.id;
+        const email = row.dataset.email;
+        if (!confirm(`Supprimer définitivement le compte ${email} ?`)) return;
+
+        const { ok, data } = await apiRequest(`/admin/api/comptes/${id}`, 'DELETE', {});
+        if (ok) {
+          showToast('Compte supprimé.');
+          row.remove();
+        } else {
+          showToast(data.error || 'Erreur lors de la suppression.', 'warn');
+        }
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        nom: document.getElementById('modal_nom').value,
+        prenom: document.getElementById('modal_prenom').value,
+        email: document.getElementById('modal_email').value,
+        password: document.getElementById('modal_password').value,
+        is_admin: document.getElementById('modal_is_admin').checked
+      };
+
+      const id = idField.value;
+      const { ok, data } = id
+        ? await apiRequest(`/admin/api/comptes/${id}`, 'PUT', payload)
+        : await apiRequest('/admin/api/comptes', 'POST', payload);
+
+      if (ok) {
+        showToast(id ? 'Compte modifié avec succès.' : 'Compte créé avec succès.');
+        closeModal();
+        setTimeout(() => window.location.reload(), 600);
+      } else {
+        showToast(data.error || 'Une erreur est survenue.', 'warn');
+      }
+    });
+  </script>
+</body>
+</html>

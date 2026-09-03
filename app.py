@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template,redirect,url_for,jsonify
+from flask import Flask, request, render_template,redirect,url_for,jsonify,abort
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask import session
@@ -44,25 +44,45 @@ login_manager.login_view = "login_page" #si la personne essaie d'acceder a la pa
 
 
 class User(UserMixin):
+    # user_row : dictionnaire (RealDictCursor), jamais un tuple positionnel -
+    # evite tout risque de melanger les colonnes si une requete change d'ordre entre-temps.
     def __init__(self, user_row):
-        self.id = str(user_row[0])#je le met sous forme de cle car avec sql c'est du tuple et pas un dic comme mongodb
-        self.nom = user_row[1]
-        self.prenom = user_row[2]
-        self.email = user_row[3]
+        self.id = str(user_row['id'])
+        self.nom = user_row['nom']
+        self.prenom = user_row['prenom']
+        self.email = user_row['email']
+        self.is_admin = bool(user_row.get('is_admin', False))
 
-        
+
 
 @login_manager.user_loader
 def load_user(user_id):
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nom, prenom, email FROM compte_client WHERE id = %s", (user_id,))
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT id, nom, prenom, email, is_admin FROM compte_client WHERE id = %s", (user_id,))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
     if user:
         return User(user)
     return None
+
+
+def admin_required(f):
+    """Autorise uniquement les comptes avec is_admin = True.
+    Different de login_required : ici l'utilisateur peut etre connecte
+    mais ne pas avoir le droit d'acceder a la ressource (403), pas juste redirige vers /login."""
+    from functools import wraps
+
+    @wraps(f)
+    @login_required
+    def wrapper(*args, **kwargs):
+        if not current_user.is_admin:
+            if request.method != 'GET':
+                return jsonify({"error": "Accès réservé aux administrateurs."}), 403
+            return render_template('403.html'), 403
+        return f(*args, **kwargs)
+    return wrapper
 
 
 @app.route("/")
@@ -144,8 +164,6 @@ def hotels():
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT * FROM hotels")
-
-
 
     return render_template('hotels.html', hotels=cursor.fetchall())        
 
@@ -270,22 +288,22 @@ def creation_compte():
 @limiter.limit('5 per minute', methods=['POST'])
 def login_page():
 
-    conn = get_connection() # connect la db 
-    cursor = conn.cursor() # execute les requetes sql
+    conn = get_connection() # connect la db
+    cursor = conn.cursor(cursor_factory=RealDictCursor) # execute les requetes sql
 
 
     try :
 
         if request.method == "POST":
 
-            try : 
+            try :
                 user_entry = request.form['email_user']
                 pwd_entry = request.form['password']
 
-                cursor.execute("SELECT id, nom, prenom, email, mdp FROM compte_client WHERE email = %s", (user_entry,))
+                cursor.execute("SELECT id, nom, prenom, email, mdp, is_admin FROM compte_client WHERE email = %s", (user_entry,))
                 user = cursor.fetchone()
 
-                if user and bcrypt.checkpw(pwd_entry.encode('utf-8'), user[4].encode('utf-8')):
+                if user and bcrypt.checkpw(pwd_entry.encode('utf-8'), user['mdp'].encode('utf-8')):
 
                     print('Success')
                     session.permanent = True
@@ -296,6 +314,11 @@ def login_page():
                     next_page = request.args.get('next')
                     if next_page and next_page.startswith('/'):
                         return redirect(next_page)
+
+                    # un compte administrateur est bascule directement sur le dashboard admin,
+                    # separe du site client
+                    if user['is_admin']:
+                        return redirect(url_for('admin_comptes'))
 
                     return redirect(url_for('home'))
                 else:
@@ -759,6 +782,157 @@ def profil_delete():
         conn.commit()
 
         logout_user()
+        return jsonify({"success": True}), 200
+
+    except Exception:
+        conn.rollback()
+        return jsonify({"error": "Erreur lors de la suppression du compte."}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/admin/comptes", methods=['GET'])
+@admin_required
+def admin_comptes():
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        cursor.execute("""
+            SELECT id, nom, prenom, email, is_admin, date_inscription
+            FROM compte_client
+            ORDER BY date_inscription DESC NULLS LAST, id DESC
+        """)
+        comptes = cursor.fetchall()
+        return render_template('admin_comptes.html', comptes=comptes)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def _valider_champs_compte(data, password_required):
+    """Validation centralisee (whitelist explicite - jamais de mass assignment).
+    Renvoie (nom, prenom, email, password_ou_None, is_admin, erreur_ou_None)."""
+    nom = (data.get('nom') or '').strip()
+    prenom = (data.get('prenom') or '').strip()
+    email = (data.get('email') or '').strip()
+    password = data.get('password') or ''
+    is_admin = data.get('is_admin') in (True, 'true', 'on', '1', 1)
+
+    if not nom or not prenom or not email:
+        return None, None, None, None, None, "Nom, prénom et email sont obligatoires."
+
+    if '@' not in email or '.' not in email.split('@')[-1]:
+        return None, None, None, None, None, "Adresse email invalide."
+
+    if password_required and len(password) < 8:
+        return None, None, None, None, None, "Le mot de passe doit contenir au moins 8 caractères."
+
+    if password and not password_required and len(password) < 8:
+        return None, None, None, None, None, "Le mot de passe doit contenir au moins 8 caractères."
+
+    return nom, prenom, email, (password or None), is_admin, None
+
+
+@app.route("/admin/api/comptes", methods=['POST'])
+@admin_required
+@limiter.limit('20 per minute')
+def admin_comptes_create():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        data = request.get_json(silent=True) or request.form
+
+        nom, prenom, email, password, is_admin_flag, erreur = _valider_champs_compte(data, password_required=True)
+        if erreur:
+            return jsonify({"error": erreur}), 400
+
+        hash_pwd = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        cursor.execute(
+            "INSERT INTO compte_client (nom, prenom, email, mdp, is_admin) VALUES (%s, %s, %s, %s, %s) RETURNING id",
+            (nom, prenom, email, hash_pwd, is_admin_flag)
+        )
+        new_id = cursor.fetchone()[0]
+        conn.commit()
+        return jsonify({"success": True, "id": new_id}), 201
+
+    except errors.UniqueViolation:
+        conn.rollback()
+        return jsonify({"error": "Cette adresse mail est déjà utilisée par un autre compte."}), 409
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/admin/api/comptes/<int:compte_id>", methods=['PUT'])
+@admin_required
+@limiter.limit('30 per minute')
+def admin_comptes_update(compte_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        data = request.get_json(silent=True) or request.form
+
+        nom, prenom, email, password, is_admin_flag, erreur = _valider_champs_compte(data, password_required=False)
+        if erreur:
+            return jsonify({"error": erreur}), 400
+
+        # un admin ne peut pas se retirer lui-meme ses droits depuis cette page
+        # (protection anti-lockout : il faut qu'un AUTRE admin le fasse)
+        if str(compte_id) == current_user.id and not is_admin_flag:
+            return jsonify({"error": "Vous ne pouvez pas retirer vos propres droits administrateur."}), 400
+
+        if password:
+            hash_pwd = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            cursor.execute(
+                "UPDATE compte_client SET nom = %s, prenom = %s, email = %s, is_admin = %s, mdp = %s WHERE id = %s",
+                (nom, prenom, email, is_admin_flag, hash_pwd, compte_id)
+            )
+        else:
+            cursor.execute(
+                "UPDATE compte_client SET nom = %s, prenom = %s, email = %s, is_admin = %s WHERE id = %s",
+                (nom, prenom, email, is_admin_flag, compte_id)
+            )
+
+        if cursor.rowcount == 0:
+            conn.rollback()
+            return jsonify({"error": "Compte introuvable."}), 404
+
+        conn.commit()
+        return jsonify({"success": True}), 200
+
+    except errors.UniqueViolation:
+        conn.rollback()
+        return jsonify({"error": "Cette adresse mail est déjà utilisée par un autre compte."}), 409
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/admin/api/comptes/<int:compte_id>", methods=['DELETE'])
+@admin_required
+@limiter.limit('10 per minute')
+def admin_comptes_delete(compte_id):
+    if str(compte_id) == current_user.id:
+        return jsonify({"error": "Vous ne pouvez pas supprimer votre propre compte depuis cette page. Utilisez votre profil."}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        # pas de ON DELETE CASCADE en base : on supprime d'abord les reservations liees
+        cursor.execute("DELETE FROM reservations_hotel WHERE client_id = %s", (compte_id,))
+        cursor.execute("DELETE FROM reservations_vol WHERE client_id = %s", (compte_id,))
+        cursor.execute("DELETE FROM compte_client WHERE id = %s", (compte_id,))
+
+        if cursor.rowcount == 0:
+            conn.rollback()
+            return jsonify({"error": "Compte introuvable."}), 404
+
+        conn.commit()
         return jsonify({"success": True}), 200
 
     except Exception:
