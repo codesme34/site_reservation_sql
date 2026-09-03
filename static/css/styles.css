@@ -107,7 +107,98 @@ header {
 }
 
 .boutton_connect{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background-color: #fff;
+  color: #222;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+
+.boutton_connect:hover {
+  background-color: #f2f6fa;
+}
+
+.boutton_connect span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+}
+
+/* ──────────────────────────────────────────────── */
+/* Menu deroulant "Mon compte" */
+/* ──────────────────────────────────────────────── */
+.account-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.account-menu__toggle {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  margin: 0;
+}
+
+.account-menu__caret {
+  font-size: 0.7rem !important;
+  margin-left: 2px;
+  color: #888;
+  transition: transform 0.2s ease;
+}
+
+.account-menu.open .account-menu__caret {
+  transform: rotate(180deg);
+}
+
+.account-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 190px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  border: 1px solid #eef2f7;
+  padding: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1100;
+}
+
+.account-menu.open .account-menu__dropdown {
+  display: flex;
+}
+
+.account-menu__dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.15s ease;
+}
+
+.account-menu__dropdown a:hover {
+  background: #f2f6fa;
+  color: #01abf3;
+}
+
+.account-menu__dropdown a i {
+  width: 16px;
+  color: #01abf3;
 }
 
 .fa-circle-user{
@@ -756,6 +847,112 @@ header {
 
 .payment-card__title i {
   color: #01abf3;
+}
+
+/* ──────────────────────────────────────────────── */
+/* PAGE PROFIL */
+/* ──────────────────────────────────────────────── */
+
+.profil-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+}
+
+.profil-columns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.profil-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  border: 1px solid #eef2f7;
+  flex: 1 1 320px;
+}
+
+.profil-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #012b47;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profil-card__title i {
+  color: #01abf3;
+}
+
+.profil-card .field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.profil-card .field-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.profil-card .field-group input {
+  height: 46px;
+  border: 1.5px solid #e5eaf0;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 0.92rem;
+  color: #222;
+  background: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.profil-card .field-group input:focus {
+  border-color: #01abf3;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(1,171,243,0.10);
+}
+
+.profil-card button[type="submit"] {
+  width: 100%;
+  height: 48px;
+  margin-top: 4px;
+  background: linear-gradient(135deg, #01abf3, #0170aa);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.profil-card button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(1,112,170,0.28);
+}
+
+.profil-card--danger {
+  border: 1px solid #f3c8bf;
+  background: #fff8f6;
+}
+
+.profil-card--danger p {
+  font-size: 0.85rem;
+  color: #7a3b30;
+  margin-bottom: 16px;
+}
+
+.profil-card--danger .btn-danger {
+  background: linear-gradient(135deg, #e0402c, #a8291a) !important;
 }
 
 .payment-card .field-group {
@@ -1679,6 +1876,89 @@ body > main {
   font-size: 13px;
 }
 
+.footer-legal-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 8px;
+}
+
+.footer-legal-links a {
+  color: rgba(255,255,255,.75);
+  text-decoration: none;
+  font-size: 12.5px;
+}
+
+.footer-legal-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   PAGES LEGALES (mentions, confidentialite, cgv)
+   ============================================================ */
+.legal-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+}
+
+.legal-content section {
+  margin-bottom: 28px;
+}
+
+.legal-content h2 {
+  font-size: 1.2rem;
+  color: var(--color-navy);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.legal-content p {
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.legal-content ul {
+  margin: 8px 0 8px 20px;
+  line-height: 1.7;
+}
+
+.legal-content a {
+  color: var(--color-blue);
+}
+
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.92rem;
+}
+
+.legal-table th,
+.legal-table td {
+  border: 1px solid var(--color-border);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal-table th {
+  background: var(--color-navy);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .legal-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -2306,5 +2586,84 @@ body > main {
     right: 16px;
     bottom: 16px;
     max-width: none;
+  }
+}
+
+/* ──────────────────────────────────────────────── */
+/* Bandeau cookies (RGPD) */
+/* ──────────────────────────────────────────────── */
+.cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  background: var(--color-navy, #0a2342);
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+}
+
+.cookie-banner p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  max-width: 720px;
+  color: rgba(255,255,255,0.9);
+}
+
+.cookie-banner a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.cookie-banner__actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cookie-banner__actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.cookie-banner__refuse {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.4) !important;
+}
+
+.cookie-banner__refuse:hover {
+  border-color: #fff !important;
+}
+
+.cookie-banner__accept {
+  background: rgb(43, 218, 124);
+  color: #0a0a0a;
+}
+
+.cookie-banner__accept:hover {
+  background: rgb(30, 190, 105);
+}
+
+@media (max-width: 640px) {
+  .cookie-banner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .cookie-banner__actions {
+    justify-content: center;
   }
 }

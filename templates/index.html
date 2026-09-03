@@ -35,10 +35,16 @@
 
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <a href="/logout" class="boutton_connect">
-          <i class="fa-solid fa-circle-user"></i>
-          <span>Déconnexion</span>
-        </a>
+        <div class="account-menu">
+          <button type="button" class="boutton_connect account-menu__toggle" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-chevron-down account-menu__caret"></i>
+          </button>
+          <div class="account-menu__dropdown">
+            <a href="/profil"><i class="fa-solid fa-user"></i> Mon profil</a>
+            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+          </div>
+        </div>
         {% else %}
         <a href="/login" class="boutton_connect">
           <i class="fa-solid fa-circle-user"></i>
@@ -74,10 +80,7 @@
         <i class="fa-solid fa-fire"></i>
         <span>OFFRES</span>
       </a>
-      <a href="#pages">
-        <i class="fa-solid fa-file"></i>
-        <span>PAGES</span>
-      </a>
+
       <a href="/contact">
         <i class="fa-solid fa-envelope"></i>
         <span>CONTACT</span>
@@ -290,8 +293,13 @@
   </main>
 
     <footer class="site-footer">
-    <p>© 2026 Airlines Reservation – Tous droits réservés</p>
-  </footer>
+      <p>© 2026 Airlines Reservation – Tous droits réservés</p>
+      <nav class="footer-legal-links" aria-label="Liens légaux">
+        <a href="/mentions-legales">Mentions légales</a>
+        <a href="/confidentialite">Politique de confidentialité</a>
+        <a href="/cgv">CGV</a>
+      </nav>
+    </footer>
 
   <script src="static/js/script.js"></script>
 </body>

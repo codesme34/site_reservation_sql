@@ -19,6 +19,34 @@ if (choiceEl) {
 }
 
 // ──────────────────────────────────────────────
+// Menu déroulant "Mon compte" (profil / déconnexion)
+// ──────────────────────────────────────────────
+const accountMenu = document.querySelector('.account-menu');
+if (accountMenu) {
+    const toggle = accountMenu.querySelector('.account-menu__toggle');
+
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = accountMenu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!accountMenu.contains(e.target)) {
+            accountMenu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            accountMenu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
+// ──────────────────────────────────────────────
 // Popup de confirmation (toast) - formulaire de contact
 // ──────────────────────────────────────────────
 function showToast(message, type = 'success') {
@@ -71,4 +99,40 @@ if (document.body.dataset.signupError === 'email_exists') {
     showToast('Cette adresse mail est déjà utilisée par un compte existant.', 'warn');
 } else if (document.body.dataset.signupError === 'password_mismatch') {
     showToast('Les mots de passe ne correspondent pas.', 'warn');
+}
+
+// ──────────────────────────────────────────────
+// Bandeau cookies (RGPD)
+// ──────────────────────────────────────────────
+function showCookieBanner() {
+    const banner = document.createElement('div');
+    banner.className = 'cookie-banner';
+    banner.setAttribute('role', 'dialog');
+    banner.setAttribute('aria-label', 'Gestion des cookies');
+    banner.innerHTML =
+        '<p>Ce site utilise uniquement un cookie de session strictement nécessaire à votre connexion. ' +
+        'Aucun cookie de suivi ou publicitaire n\'est utilisé. ' +
+        '<a href="/confidentialite">En savoir plus</a></p>' +
+        '<div class="cookie-banner__actions">' +
+        '<button type="button" class="cookie-banner__refuse">Refuser</button>' +
+        '<button type="button" class="cookie-banner__accept">Accepter</button>' +
+        '</div>';
+    document.body.appendChild(banner);
+
+    banner.querySelector('.cookie-banner__accept').addEventListener('click', () => {
+        localStorage.setItem('cookie_consent', 'accepted');
+        banner.remove();
+    });
+    banner.querySelector('.cookie-banner__refuse').addEventListener('click', () => {
+        localStorage.setItem('cookie_consent', 'refused');
+        banner.remove();
+    });
+}
+
+try {
+    if (!localStorage.getItem('cookie_consent')) {
+        showCookieBanner();
+    }
+} catch (e) {
+    // localStorage indisponible (navigation privée stricte, etc.) : on n'affiche pas le bandeau
 }

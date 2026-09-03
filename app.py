@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template,redirect,url_for
+from flask import Flask, request, render_template,redirect,url_for,jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask import session
@@ -14,17 +14,11 @@ import datetime
 from datetime import timedelta
 
 # admin avec delete , put , insert, delete hotel avec et sans frameworks,
-# ameliorer le formulaire 
-# le cookies pour accepeter ou non les cooikes....
-# la rgpd
-# pop up js 
-# utilise du js obligatoire 
+# ameliorer le formulaire
 # inclusitvite,navigation clavier
 # parler des alt pour le front
 # penser au gens qui sont dixelitique, non voyant etc ...
 # utiliser du js pour du carousel par exemple....
-# mettre du bouton 
-# contacte rate limit pas de pop up qui affiche un message vous avez trop essayer etc...
 #proteger du spam
 
 
@@ -658,7 +652,138 @@ def mes_destinations():
     finally:
         cursor.close()
         conn.close()
-    
+
+
+@app.route("/profil", methods=['GET'])
+@login_required
+def profil():
+    conn = get_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        cursor.execute("SELECT id, nom, prenom, email FROM compte_client WHERE id = %s", (current_user.id,))
+        user = cursor.fetchone()
+        return render_template('profil.html', user=user)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/profil", methods=['PUT'])
+@login_required
+@limiter.limit('10 per minute')
+def profil_update():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        data = request.get_json(silent=True) or request.form
+
+        nom = (data.get('nom') or '').strip()
+        prenom = (data.get('prenom') or '').strip()
+        email = (data.get('email') or '').strip()
+
+        if not nom or not prenom or not email:
+            return jsonify({"error": "Tous les champs sont obligatoires."}), 400
+
+        cursor.execute(
+            "UPDATE compte_client SET nom = %s, prenom = %s, email = %s WHERE id = %s",
+            (nom, prenom, email, current_user.id)
+        )
+        conn.commit()
+        return jsonify({"success": True, "nom": nom, "prenom": prenom, "email": email}), 200
+
+    except errors.UniqueViolation:
+        conn.rollback()
+        return jsonify({"error": "Cette adresse mail est déjà utilisée par un autre compte."}), 409
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/profil/password", methods=['PUT'])
+@login_required
+@limiter.limit('5 per minute')
+def profil_update_password():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        data = request.get_json(silent=True) or request.form
+
+        current_pwd = data.get('current_password') or ''
+        new_pwd = data.get('new_password') or ''
+        confirm_pwd = data.get('confirm_new_password') or ''
+
+        cursor.execute("SELECT mdp FROM compte_client WHERE id = %s", (current_user.id,))
+        row = cursor.fetchone()
+
+        if not row or not bcrypt.checkpw(current_pwd.encode('utf-8'), row[0].encode('utf-8')):
+            return jsonify({"error": "Mot de passe actuel incorrect."}), 401
+
+        if len(new_pwd) < 8:
+            return jsonify({"error": "Le nouveau mot de passe doit contenir au moins 8 caractères."}), 400
+
+        if new_pwd != confirm_pwd:
+            return jsonify({"error": "Les nouveaux mots de passe ne correspondent pas."}), 400
+
+        hash_pwd = bcrypt.hashpw(new_pwd.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        cursor.execute("UPDATE compte_client SET mdp = %s WHERE id = %s", (hash_pwd, current_user.id))
+        conn.commit()
+        return jsonify({"success": True}), 200
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/profil", methods=['DELETE'])
+@login_required
+@limiter.limit('3 per minute')
+def profil_delete():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        data = request.get_json(silent=True) or request.form
+        pwd_confirm = data.get('password') or ''
+
+        cursor.execute("SELECT mdp FROM compte_client WHERE id = %s", (current_user.id,))
+        row = cursor.fetchone()
+
+        if not row or not bcrypt.checkpw(pwd_confirm.encode('utf-8'), row[0].encode('utf-8')):
+            return jsonify({"error": "Mot de passe incorrect."}), 401
+
+        # on supprime d'abord les reservations liees (pas de ON DELETE CASCADE en base)
+        # avant de supprimer le compte, sinon la contrainte FOREIGN KEY bloque le DELETE
+        cursor.execute("DELETE FROM reservations_hotel WHERE client_id = %s", (current_user.id,))
+        cursor.execute("DELETE FROM reservations_vol WHERE client_id = %s", (current_user.id,))
+        cursor.execute("DELETE FROM compte_client WHERE id = %s", (current_user.id,))
+        conn.commit()
+
+        logout_user()
+        return jsonify({"success": True}), 200
+
+    except Exception:
+        conn.rollback()
+        return jsonify({"error": "Erreur lors de la suppression du compte."}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/mentions-legales", methods=['GET'])
+def mentions_legales():
+    return render_template('mentions_legales.html')
+
+
+@app.route("/confidentialite", methods=['GET'])
+def confidentialite():
+    return render_template('confidentialite.html')
+
+
+@app.route("/cgv", methods=['GET'])
+def cgv():
+    return render_template('cgv.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")#attention a ne pas mettre en true en prod !!!!!!! 

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Politique de confidentialité et protection des données personnelles (RGPD) du site Airlines Reservation.">
+  <title>Politique de confidentialité | Airlines Reservation</title>
+  <link rel="canonical" href="{{ request.base_url }}">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+</head>
+
+<body>
+
+  <div class="sticky-wrapper">
+    <header>
+      <!-- Logo à gauche -->
+      <a href="/">
+        <div class="logo">
+          <img src="static/assets/images/logo_avion.webp" alt="Logo">
+        </div>
+      </a>
+
+      <!-- Milieu : Icône WhatsApp + textes -->
+      <div class="center-part">
+        <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+        <div class="text-stack">
+          <span class="text-top">24h/7J</span>
+          <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+        </div>
+      </div>
+
+      <div class="login_side">
+        {% if current_user.is_authenticated %}
+        <div class="account-menu">
+          <button type="button" class="boutton_connect account-menu__toggle" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-chevron-down account-menu__caret"></i>
+          </button>
+          <div class="account-menu__dropdown">
+            <a href="/profil"><i class="fa-solid fa-user"></i> Mon profil</a>
+            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+          </div>
+        </div>
+        {% else %}
+        <a href="/login" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Mon compte</span>
+        </a>
+        {% endif %}
+      </div>
+    </header>
+<nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+  </div>
+
+  <main class="legal-main">
+    <h1 class="panier-title"><i class="fa-solid fa-user-shield"></i> Politique de confidentialité</h1>
+
+    <div class="legal-content">
+      <section>
+        <p>Cette page explique quelles données personnelles sont collectées sur Airlines Reservation, pourquoi, et quels droits vous pouvez exercer, conformément au Règlement Général sur la Protection des Données (RGPD).</p>
+      </section>
+
+      <section>
+        <h2>Données que nous collectons</h2>
+        <table class="legal-table">
+          <thead>
+            <tr>
+              <th>Formulaire</th>
+              <th>Données collectées</th>
+              <th>Finalité</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Création de compte</td>
+              <td>Nom, prénom, email, mot de passe (haché, jamais stocké en clair)</td>
+              <td>Créer et sécuriser votre espace personnel</td>
+            </tr>
+            <tr>
+              <td>Contact</td>
+              <td>Nom, prénom, téléphone, email, message</td>
+              <td>Répondre à votre demande</td>
+            </tr>
+            <tr>
+              <td>Paiement / réservation</td>
+              <td>Nom, prénom, adresse, ville, code postal, téléphone, email</td>
+              <td>Finaliser votre réservation</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Le formulaire de paiement demande également un numéro de carte, une date d'expiration et un CVV : il s'agit d'une simulation pédagogique, ces informations ne sont jamais enregistrées en base de données ni transmises à un tiers.</p>
+      </section>
+
+      <section>
+        <h2>Base légale et durée de conservation</h2>
+        <p>Vos données sont traitées sur la base de l'exécution du service que vous demandez (créer un compte, envoyer un message, réserver). Elles sont conservées le temps nécessaire à cette finalité, et supprimées ou anonymisées si vous demandez la suppression de votre compte.</p>
+      </section>
+
+      <section>
+        <h2>Cookies</h2>
+        <p>Le site utilise un cookie de session strictement nécessaire au fonctionnement du site (rester connecté à votre compte). Ce cookie est signé et expire automatiquement après 30 minutes d'inactivité. Il ne sert à aucun suivi publicitaire et aucun cookie tiers n'est déposé par ce site.</p>
+      </section>
+
+      <section>
+        <h2>Vos droits</h2>
+        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos données. Pour exercer ces droits, contactez-nous via le <a href="/contact">formulaire de contact</a> en précisant votre demande.</p>
+      </section>
+
+      <section>
+        <h2>Sécurité</h2>
+        <p>Les mots de passe sont hachés (bcrypt) et jamais stockés en clair. Les échanges avec le serveur passent par des requêtes protégées contre les injections SQL, et chaque formulaire est protégé contre les attaques CSRF.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Airlines Reservation – Tous droits réservés</p>
+    <nav class="footer-legal-links" aria-label="Liens légaux">
+      <a href="/mentions-legales">Mentions légales</a>
+      <a href="/confidentialite">Politique de confidentialité</a>
+      <a href="/cgv">CGV</a>
+    </nav>
+  </footer>
+
+  <script src="/static/js/script.js"></script>
+</body>
+</html>

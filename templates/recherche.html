@@ -40,10 +40,16 @@
 
       <div class="login_side">
         {% if current_user.is_authenticated %}
-        <a href="/logout" class="boutton_connect">
-          <i class="fa-solid fa-circle-user"></i>
-          <span>Déconnexion</span>
-        </a>
+        <div class="account-menu">
+          <button type="button" class="boutton_connect account-menu__toggle" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-chevron-down account-menu__caret"></i>
+          </button>
+          <div class="account-menu__dropdown">
+            <a href="/profil"><i class="fa-solid fa-user"></i> Mon profil</a>
+            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+          </div>
+        </div>
         {% else %}
         <a href="/login" class="boutton_connect">
           <i class="fa-solid fa-circle-user"></i>
@@ -80,10 +86,7 @@
         <i class="fa-solid fa-fire"></i>
         <span>OFFRES</span>
       </a>
-      <a href="#pages">
-        <i class="fa-solid fa-file"></i>
-        <span>PAGES</span>
-      </a>
+
       <a href="/contact">
         <i class="fa-solid fa-envelope"></i>
         <span>CONTACT</span>
@@ -100,39 +103,109 @@
   </div>
 
   <main>
-  <h1 class="page-title">Résultats de recherche</h1>
+  <section class="catalog-section">
+    <div class="catalog-header">
+      <div class="catalog-headline">
+        <div class="catalog-kicker">Résultats</div>
+        <h1 class="catalog-title">Résultats de <em>recherche</em></h1>
+      </div>
+    </div>
 
-  <section class="results-grid">
-  {% for item in resultats %}
-  <div class="result-card">
-    {% if type == 'hotel' %}
-      <img src="{{ item.photos }}" alt="{{ item.nom }}">
-      <div class="result-card-body">
-        <h2>{{ item.nom }}</h2>
-        <p>{{ item.ville }}</p>
-        <p class="result-price">{{ item.tarifs }} €/nuit</p>
+    <div class="cards-grid">
+      {% for item in resultats %}
+      {% if type == 'hotel' %}
+      <div class="h-card">
+        <div class="h-card__img-wrap">
+          <img src="{{ item.photos }}" alt="{{ item.nom }}">
+          <div class="h-card__badge">Hôtel</div>
+          <div class="h-card__stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-regular fa-star"></i>
+          </div>
+          <div class="h-card__img-price">{{ item.tarifs }} € <span>/nuit</span></div>
+        </div>
+        <div class="h-card__body">
+          <h2 class="h-card__name">{{ item.nom }}</h2>
+          <div class="h-card__location">
+            <i class="fa-solid fa-location-dot"></i> {{ item.ville }}, {{ item.pays }}
+          </div>
+          <div class="h-card__meta">
+            <span class="h-card__pill"><i class="fa-solid fa-building"></i> {{ item.cp }}</span>
+            <span class="h-card__pill"><i class="fa-solid fa-phone"></i> {{ item.telephone }}</span>
+          </div>
+          <p class="h-card__desc">{{ item.descriptions }}</p>
+          <div class="h-card__footer">
+            <div class="h-card__avis">
+              <i class="fa-solid fa-star"></i> {{ item.avis }}
+            </div>
+            <a href="/reservation/{{ item.slug }}" class="btn-reserve">
+              Réserver <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
       </div>
-      <button class="reserve-button"><a href="/reservation/{{ item.slug }}">Réserver</a></button>
-    {% else %}
-      <img src="{{ item.image }}" alt="{{ item.ville }}">
-      <div class="result-card-body">
-        <h2>{{ item.ville }}</h2>
-        <p>{{ item.pays }} — {{ item.code_iata }}</p>
-        <p>{{ item.aeroport }}</p>
-        <p>Prochain départ : {{ item.date }} à {{ item.heure_depart }}</p>
-        <p class="result-price">{{ item.prix }} €</p>
+      {% else %}
+      <div class="v-card">
+        <div class="v-card__img-wrap">
+          <img src="{{ item.image }}" alt="{{ item.ville }}">
+          <div class="v-card__badge">Vol direct</div>
+          <div class="v-card__iata">
+            {{ item.code_iata }}
+            <small>{{ item.ville }}</small>
+          </div>
+          <div class="v-card__price-badge">{{ item.prix }} €</div>
+        </div>
+        <div class="v-card__body">
+          <div class="v-card__route">
+            <div>
+              <h2 class="v-card__city">{{ item.ville }}</h2>
+              <div class="v-card__pays">{{ item.pays }}</div>
+            </div>
+            <i class="fa-solid fa-plane v-card__plane"></i>
+          </div>
+          <div class="v-card__timeline">
+            <div class="v-timeline-row">
+              <i class="fa-solid fa-plane-departure"></i>
+              <span>Aéroport :</span><strong>{{ item.aeroport }}</strong>
+            </div>
+            <div class="v-timeline-row">
+              <i class="fa-regular fa-calendar"></i>
+              <span>Date :</span><strong>{{ item.date }}</strong>
+            </div>
+            <div class="v-timeline-row">
+              <i class="fa-regular fa-clock"></i>
+              <span>Départ :</span><strong>{{ item.heure_depart }}</strong>
+            </div>
+          </div>
+          <div class="v-card__footer">
+            <div class="v-card__price">
+              <span class="price-from">À partir de</span>
+              <span class="price-big">{{ item.prix }} <small>€</small></span>
+            </div>
+            <a href="/reservation/vols/{{ item.id }}" class="btn-reserve">
+              Réserver <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
       </div>
-      <button class="reserve-button"><a href="/reservation/vols/{{ item.id }}">Réserver</a></button>
-    {% endif %}
-  </div>
-  {% endfor %}
-</section>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </section>
   </main>
 
 
     <footer class="site-footer">
-    <p>© 2025 Airlines Reservation – Tous droits réservés</p>
-  </footer>
+      <p>© 2025 Airlines Reservation – Tous droits réservés</p>
+      <nav class="footer-legal-links" aria-label="Liens légaux">
+        <a href="/mentions-legales">Mentions légales</a>
+        <a href="/confidentialite">Politique de confidentialité</a>
+        <a href="/cgv">CGV</a>
+      </nav>
+    </footer>
 
   <script src="static/js/script.js"></script>
 </body>

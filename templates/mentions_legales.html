@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Découvrez notre sélection d'hôtels en France et en Europe. Comparez les tarifs, les avis et réservez votre chambre en quelques clics.">
-  <title>Nos Hôtels | Airlines Reservation</title>
+  <meta name="description" content="Mentions légales du site Airlines Reservation : éditeur, hébergeur, propriété intellectuelle.">
+  <title>Mentions légales | Airlines Reservation</title>
   <link rel="canonical" href="{{ request.base_url }}">
   <link rel="stylesheet" href="/static/css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
@@ -34,9 +34,6 @@
         </div>
       </div>
 
-
-
-
       <div class="login_side">
         {% if current_user.is_authenticated %}
         <div class="account-menu">
@@ -57,9 +54,7 @@
         {% endif %}
       </div>
     </header>
-
-
-    <nav class="sub-navbar">
+<nav class="sub-navbar">
       <a href="/">
         <i class="fa-solid fa-home"></i>
         <span>Accueil</span>
@@ -80,7 +75,6 @@
         <i class="fa-solid fa-car"></i>
         <span>LOCATION VOITURE</span>
       </a>
-
       <a href="#offres">
         <i class="fa-solid fa-fire"></i>
         <span>OFFRES</span>
@@ -101,64 +95,51 @@
     </nav>
   </div>
 
-  <main>
-  <section class="catalog-section">
-    <div class="catalog-header">
-      <div class="catalog-headline">
-        <div class="catalog-kicker">Nos destinations</div>
-        <h1 class="catalog-title">Nos <em>hôtels</em></h1>
-      </div>
-    </div>
+  <main class="legal-main">
+    <h1 class="panier-title"><i class="fa-solid fa-scale-balanced"></i> Mentions légales</h1>
 
-    <div class="cards-grid">
-      {% for hotel in hotels %}
-      <div class="h-card">
-        <div class="h-card__img-wrap">
-          <img src="{{ hotel.photos }}" alt="{{ hotel.nom }}">
-          <div class="h-card__badge">Hôtel</div>
-          <div class="h-card__stars">
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-regular fa-star"></i>
-          </div>
-          <div class="h-card__img-price">{{ hotel.tarifs }} € <span>/nuit</span></div>
-        </div>
-        <div class="h-card__body">
-          <h2 class="h-card__name">{{ hotel.nom }}</h2>
-          <div class="h-card__location">
-            <i class="fa-solid fa-location-dot"></i> {{ hotel.ville }}, {{ hotel.pays }}
-          </div>
-          <div class="h-card__meta">
-            <span class="h-card__pill"><i class="fa-solid fa-building"></i> {{ hotel.cp }}</span>
-            <span class="h-card__pill"><i class="fa-solid fa-phone"></i> {{ hotel.telephone }}</span>
-          </div>
-          <p class="h-card__desc">{{ hotel.descriptions }}</p>
-          <div class="h-card__footer">
-            <div class="h-card__avis">
-              <i class="fa-solid fa-star"></i> {{ hotel.avis }}
-            </div>
-            <a href="/reservation/{{ hotel.slug }}" class="btn-reserve">
-              Réserver <i class="fa-solid fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+    <div class="legal-content">
+      <section>
+        <h2>Éditeur du site</h2>
+        <p>Le site Airlines Reservation est un projet réalisé dans un cadre pédagogique (examen de développement web). Il ne constitue pas une véritable agence de voyage et aucune transaction financière réelle n'y est effectuée.</p>
+        <ul>
+          <li>Nom du projet : Airlines Reservation</li>
+          <li>Contact : contact@airlines-reservation.fr</li>
+          <li>Responsable du développement : l'auteur de ce projet, dans le cadre de sa formation.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Hébergement</h2>
+        <p>Le site est hébergé chez o2switch, 222 Boulevard Gustave Flaubert, 63000 Clermont-Ferrand, France.</p>
+      </section>
+
+      <section>
+        <h2>Propriété intellectuelle</h2>
+        <p>L'ensemble des contenus présents sur ce site (textes, visuels, code source, charte graphique) est fourni à titre de démonstration dans un cadre scolaire. Les photographies utilisées proviennent de banques d'images libres de droits et servent uniquement d'illustration.</p>
+      </section>
+
+      <section>
+        <h2>Responsabilité</h2>
+        <p>Ce site étant un projet d'examen, les hôtels, vols, prix et disponibilités affichés sont fictifs. Aucune réservation réelle n'est traitée et aucun paiement réel n'est débité, y compris via le formulaire de carte bancaire présent sur le site (simulation uniquement, aucune donnée bancaire n'est transmise à un tiers ni conservée).</p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>Pour toute question concernant ce site, vous pouvez utiliser le <a href="/contact">formulaire de contact</a>.</p>
+      </section>
     </div>
-  </section>
   </main>
 
-    <footer class="site-footer">
-      <p>© 2025 Airlines Reservation – Tous droits réservés</p>
-      <nav class="footer-legal-links" aria-label="Liens légaux">
-        <a href="/mentions-legales">Mentions légales</a>
-        <a href="/confidentialite">Politique de confidentialité</a>
-        <a href="/cgv">CGV</a>
-      </nav>
-    </footer>
+  <footer class="site-footer">
+    <p>© 2026 Airlines Reservation – Tous droits réservés</p>
+    <nav class="footer-legal-links" aria-label="Liens légaux">
+      <a href="/mentions-legales">Mentions légales</a>
+      <a href="/confidentialite">Politique de confidentialité</a>
+      <a href="/cgv">CGV</a>
+    </nav>
+  </footer>
 
-  <script src="static/js/script.js"></script>
+  <script src="/static/js/script.js"></script>
 </body>
 </html>

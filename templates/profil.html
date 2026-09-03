@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Gérez les informations de votre compte Airlines Reservation.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mon profil | Airlines Reservation</title>
+  <link rel="canonical" href="{{ request.base_url }}">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+</head>
+
+<body>
+
+  <div class="sticky-wrapper">
+    <header>
+      <!-- Logo à gauche -->
+      <a href="/">
+        <div class="logo">
+          <img src="static/assets/images/logo_avion.webp" alt="Logo">
+        </div>
+      </a>
+
+      <!-- Milieu : Icône WhatsApp + textes -->
+      <div class="center-part">
+        <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
+
+        <div class="text-stack">
+          <span class="text-top">24h/7J</span>
+          <span class="text-bottom">Ligne direct : 01 64 12 32 58</span>
+        </div>
+      </div>
+
+      <div class="login_side">
+        {% if current_user.is_authenticated %}
+        <div class="account-menu">
+          <button type="button" class="boutton_connect account-menu__toggle" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-chevron-down account-menu__caret"></i>
+          </button>
+          <div class="account-menu__dropdown">
+            <a href="/profil"><i class="fa-solid fa-user"></i> Mon profil</a>
+            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+          </div>
+        </div>
+        {% else %}
+        <a href="/login" class="boutton_connect">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Mon compte</span>
+        </a>
+        {% endif %}
+      </div>
+    </header>
+<nav class="sub-navbar">
+      <a href="/">
+        <i class="fa-solid fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a href="/vols_E">
+        <i class="fa-solid fa-plane"></i>
+        <span>VOLS</span>
+      </a>
+      <a href="#vol-hotel">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>VOL + HÔTEL</span>
+      </a>
+      <a href="/hotels">
+        <i class="fa-solid fa-house-user"></i>
+        <span>HÔTELS</span>
+      </a>
+      <a href="#location-voiture">
+        <i class="fa-solid fa-car"></i>
+        <span>LOCATION VOITURE</span>
+      </a>
+      <a href="#offres">
+        <i class="fa-solid fa-fire"></i>
+        <span>OFFRES</span>
+      </a>
+
+      <a href="/contact">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT</span>
+      </a>
+      <a href="/destinations">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>MES_DESTINATIONS</span>
+      </a>
+      <a href="/panier">
+        <i class="fa-solid fa-shopping-cart"></i>
+        <span>Panier</span>
+      </a>
+    </nav>
+  </div>
+
+  <main class="profil-main">
+    <h1 class="panier-title"><i class="fa-solid fa-user"></i> Mon profil</h1>
+
+    <div class="profil-columns">
+
+      <!-- ===== INFOS PERSONNELLES ===== -->
+      <div class="profil-card">
+        <h2 class="profil-card__title"><i class="fa-solid fa-id-card"></i> Mes informations</h2>
+        <form id="form-infos">
+          <div class="field-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" value="{{ user.nom }}" required>
+          </div>
+          <div class="field-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" value="{{ user.prenom }}" required>
+          </div>
+          <div class="field-group">
+            <label for="email">Adresse e-mail</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+          </div>
+          <button type="submit">Enregistrer les modifications</button>
+        </form>
+      </div>
+
+      <!-- ===== MOT DE PASSE ===== -->
+      <div class="profil-card">
+        <h2 class="profil-card__title"><i class="fa-solid fa-key"></i> Changer mon mot de passe</h2>
+        <form id="form-password">
+          <div class="field-group">
+            <label for="current_password">Mot de passe actuel</label>
+            <input type="password" id="current_password" name="current_password" required>
+          </div>
+          <div class="field-group">
+            <label for="new_password">Nouveau mot de passe</label>
+            <input type="password" id="new_password" name="new_password" minlength="8" required>
+          </div>
+          <div class="field-group">
+            <label for="confirm_new_password">Confirmer le nouveau mot de passe</label>
+            <input type="password" id="confirm_new_password" name="confirm_new_password" minlength="8" required>
+          </div>
+          <button type="submit">Mettre à jour le mot de passe</button>
+        </form>
+      </div>
+
+      <!-- ===== SUPPRESSION DE COMPTE ===== -->
+      <div class="profil-card profil-card--danger">
+        <h2 class="profil-card__title"><i class="fa-solid fa-triangle-exclamation"></i> Supprimer mon compte</h2>
+        <p>Cette action est définitive : votre compte et toutes vos réservations seront supprimés.</p>
+        <form id="form-delete">
+          <div class="field-group">
+            <label for="delete_password">Confirmez avec votre mot de passe</label>
+            <input type="password" id="delete_password" name="password" required>
+          </div>
+          <button type="submit" class="btn-danger">Supprimer définitivement mon compte</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Airlines Reservation – Tous droits réservés</p>
+    <nav class="footer-legal-links" aria-label="Liens légaux">
+      <a href="/mentions-legales">Mentions légales</a>
+      <a href="/confidentialite">Politique de confidentialité</a>
+      <a href="/cgv">CGV</a>
+    </nav>
+  </footer>
+
+  <script src="/static/js/script.js"></script>
+  <script>
+    const CSRF_TOKEN = "{{ csrf_token() }}";
+
+    async function sendRequest(url, method, payload) {
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': CSRF_TOKEN
+        },
+        body: JSON.stringify(payload)
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) { /* pas de corps JSON */ }
+      return { ok: res.ok, status: res.status, data: data };
+    }
+
+    document.getElementById('form-infos').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const payload = {
+        nom: document.getElementById('nom').value,
+        prenom: document.getElementById('prenom').value,
+        email: document.getElementById('email').value
+      };
+      const { ok, data } = await sendRequest('/profil', 'PUT', payload);
+      if (ok) {
+        showToast('Informations mises à jour avec succès.');
+      } else {
+        showToast(data.error || 'Une erreur est survenue.', 'warn');
+      }
+    });
+
+    document.getElementById('form-password').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const payload = {
+        current_password: document.getElementById('current_password').value,
+        new_password: document.getElementById('new_password').value,
+        confirm_new_password: document.getElementById('confirm_new_password').value
+      };
+      const { ok, data } = await sendRequest('/profil/password', 'PUT', payload);
+      if (ok) {
+        showToast('Mot de passe mis à jour avec succès.');
+        document.getElementById('form-password').reset();
+      } else {
+        showToast(data.error || 'Une erreur est survenue.', 'warn');
+      }
+    });
+
+    document.getElementById('form-delete').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!confirm('Confirmez-vous la suppression définitive de votre compte ?')) {
+        return;
+      }
+      const payload = { password: document.getElementById('delete_password').value };
+      const { ok, data } = await sendRequest('/profil', 'DELETE', payload);
+      if (ok) {
+        window.location.href = '/';
+      } else {
+        showToast(data.error || 'Une erreur est survenue.', 'warn');
+      }
+    });
+  </script>
+</body>
+</html>
