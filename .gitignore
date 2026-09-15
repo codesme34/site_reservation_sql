@@ -6,3 +6,10 @@ venv/
 instance/
 *.db
 *.sqlite3
+
+# dumps et fichiers de déploiement contenant des données personnelles
+# (emails, mots de passe hashés) ou des chemins serveur - jamais sur un repo public
+full_dump_local.sql
+prod_reload_compatible.sql
+htaccess_prod.txt
+passenger_wsgi_prod.txt
