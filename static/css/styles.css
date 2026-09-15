@@ -148,6 +148,11 @@ header {
   margin: 0;
 }
 
+.account-menu__toggle:focus-visible {
+  outline: 2px solid #01abf3;
+  outline-offset: 2px;
+}
+
 .account-menu__caret {
   font-size: 0.7rem !important;
   margin-left: 2px;
@@ -432,7 +437,7 @@ header {
   height: 44px;
   border: 2px solid transparent;
   border-radius: 8px;
-  padding: 0 8px;
+  padding: 0 7px;
   font-size: 1.0rem;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -1154,6 +1159,20 @@ header {
 }
 
 /* ──── LOGIN ──── */
+/* scope propre a cette page : le wrapper global .sticky-wrapper n'est pas flex
+   partout ailleurs, donc on force ce layout uniquement sous body.login-page
+   pour coller le footer en bas sans impacter les autres pages */
+.login-page .sticky-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.login-page .sticky-wrapper main {
+  flex: 1 1 auto;
+}
+.login-page .site-footer {
+  flex-shrink: 0;
+}
 .login-wrapper {
   max-width: 420px;
   margin: 60px auto;
@@ -2919,6 +2938,11 @@ body > main {
   line-height: 1;
 }
 
+.admin-icon-btn:focus-visible {
+  outline: 2px solid #01abf3;
+  outline-offset: 2px;
+}
+
 .admin-icon-btn--edit:hover {
   background: #01abf3;
   color: #fff;
@@ -2985,6 +3009,11 @@ body > main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.admin-modal__close:focus-visible {
+  outline: 2px solid #01abf3;
+  outline-offset: 2px;
 }
 
 .admin-modal .field-group {
